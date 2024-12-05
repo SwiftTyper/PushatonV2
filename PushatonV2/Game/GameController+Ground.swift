@@ -11,7 +11,7 @@ import SceneKit
 extension GameController {
     func setupGround() {
         let floor = SCNFloor()
-//        floor.firstMaterial?.diffuse.contents = UIColor.green
+        floor.firstMaterial?.diffuse.contents = UIColor.green
         floor.reflectivity = 0.0
         
         let ground = SCNNode(geometry: floor)
