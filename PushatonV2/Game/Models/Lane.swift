@@ -48,6 +48,7 @@ class Lane: SCNNode {
         )
         
         let material = SCNMaterial()
+        segmentNode.position.y = 0.2
         
         if let texturePath = Bundle.main.path(forResource: "lightgrass", ofType: "png"),
            let texture = UIImage(contentsOfFile: texturePath) {

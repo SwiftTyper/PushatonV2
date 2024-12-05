@@ -36,11 +36,12 @@ class Obstacle: SCNNode {
         self.addChildNode(obstacle)
     }
     
-    func createObstacles(in scene: SCNScene) {
+    func createObstacles(_ gameController: GameController) {
         let newObstacle = Obstacle()
+        newObstacle.position.y += gameController.lane.boundingBox.max.y
         let moveForward = SCNAction.moveBy(x: 0, y: 0, z: 40, duration: 2.0)
         newObstacle.runAction(moveForward)
-        scene.rootNode.addChildNode(newObstacle)
+        gameController.scene.rootNode.addChildNode(newObstacle)
         obstacles.append(newObstacle)
     }
     
@@ -55,7 +56,7 @@ class Obstacle: SCNNode {
     }
    
     func setup(_ gameController: GameController) {
-        createObstacles(in: gameController.scene)
+        createObstacles(gameController)
         startObstacleSpawnTimer(gameController)
     }
     
@@ -64,7 +65,7 @@ class Obstacle: SCNNode {
         
         timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true, block: { timer in
             guard gameController.state == .playing else { return }
-            self.createObstacles(in: gameController.scene)
+            self.createObstacles(gameController)
         })
     }
     

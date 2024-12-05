@@ -36,8 +36,9 @@ extension GameController {
             moveUpAction.timingMode = .easeOut
             moveDownAction.timingMode = .easeIn
             let jumpAction = SCNAction.sequence([moveUpAction,moveDownAction])
-            player.runAction(jumpAction) {
-                self.isPlayerManeuvering = false
+            
+            player.runAction(jumpAction) { [weak self] in
+                self?.isPlayerManeuvering = false
             }
         }
     }

@@ -33,9 +33,9 @@ class GameController: NSObject {
         setupGround()
         setupGestures()
         
-        obstacle.setup(self)
-        player.setup(self)
         lane.setup(self)
+        player.setup(self)
+        obstacle.setup(self)
     }
     
     func resetGame() {
@@ -46,8 +46,8 @@ class GameController: NSObject {
         
         scene.rootNode.childNodes.forEach { node in
             node.removeFromParentNode()
+            node.removeAllActions()
         }
-        scene.rootNode.removeAllActions()
         scene = nil
     }
     

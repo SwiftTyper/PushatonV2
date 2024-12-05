@@ -17,8 +17,10 @@ class Player: SCNNode {
         playerGeometry.firstMaterial?.diffuse.contents = UIColor.blue
         geometry = playerGeometry
         
-        position = .init(x: 0, y: Float(size)/2, z: 0)
-        let physicsShape = SCNPhysicsShape(geometry: playerGeometry, options: nil)
+        let physicsShape = SCNPhysicsShape(geometry: playerGeometry, options: [
+            SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.boundingBox
+        ])
+        
         physicsBody = .init(type: .kinematic, shape: physicsShape)
         physicsBody?.categoryBitMask = CollisionCategory.player.rawValue
         physicsBody?.contactTestBitMask = CollisionCategory.obstacle.rawValue
@@ -26,6 +28,8 @@ class Player: SCNNode {
     }
     
     func setup(_ gameController: GameController) {
+        let size: Float = self.boundingBox.max.y - self.boundingBox.min.y
+        position = .init(x: 0, y: gameController.lane.boundingBox.max.y + size/2, z: 0)
         gameController.scene.rootNode.addChildNode(self)
     }
     
