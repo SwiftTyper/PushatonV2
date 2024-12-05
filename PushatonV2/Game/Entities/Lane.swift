@@ -18,10 +18,7 @@ class Lane: SCNNode {
     }
     
     func setup(_ gameController: GameController) {
-        let distanceToCamera = abs(gameController.cameraNode.position.z)
-        let fov = Float(gameController.cameraNode.camera?.fieldOfView ?? 60.0)
-        let visibleWidth = Float(2.0 * distanceToCamera * tan((.pi * fov / 180.0) / 2.0))
-        let width = CGFloat(0.4 * visibleWidth)
+        let width = CGFloat(0.4 * gameController.camera.visibleWidth)
         createInitialSegments(width: width, gameController: gameController)
         gameController.scene.rootNode.addChildNode(self)
     }

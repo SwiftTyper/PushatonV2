@@ -9,7 +9,7 @@ import Foundation
 import SceneKit
 
 class Player: SCNNode {
-    var isManuvering: Bool = false
+    private var isManeuvering: Bool = false
     
     init(size: CGFloat = 1.0) {
         super.init()
@@ -25,6 +25,28 @@ class Player: SCNNode {
         physicsBody?.categoryBitMask = CollisionCategory.player.rawValue
         physicsBody?.contactTestBitMask = CollisionCategory.obstacle.rawValue
         physicsBody?.collisionBitMask = CollisionCategory.obstacle.rawValue
+    }
+    
+    func jump() {
+        guard !isManeuvering else { return  }
+        isManeuvering = true
+        let moveUpAction = SCNAction.moveBy(x: 0, y: 1.5, z: 0, duration: 0.4)
+        let moveDownAction = SCNAction.moveBy(x: 0, y: -1.5, z: 0, duration: 0.3)
+        moveUpAction.timingMode = .easeOut
+        moveDownAction.timingMode = .easeIn
+        let jumpAction = SCNAction.sequence([moveUpAction,moveDownAction])
+        
+        self.runAction(jumpAction) { [weak self] in
+            self?.isManeuvering = false
+        }
+    }
+    
+    func dash() {
+        isManeuvering = true
+        
+        self.squashAndUnsquashHeight(durationPerAction: 0.20, intervalBetweenActions: 0.3) {
+            self.isManeuvering = false
+        }
     }
     
     func setup(_ gameController: GameController) {
