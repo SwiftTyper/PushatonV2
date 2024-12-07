@@ -9,7 +9,7 @@ class GameController: NSObject {
     var sceneView: SCNView
     var scene: SCNScene!
     
-    private var obstacleSpeed: Float = 10.0
+    var speed: Float = 0.15 //m per frame so * 60 to get m/s
     var state: GameState = .menu
     
     var camera = Camera()
@@ -33,7 +33,7 @@ class GameController: NSObject {
         ground.setup(self)
         lane.setup(self)
         player.setup(self)
-        obstacle.setup(self)
+//        obstacle.setup(self)
         light.setup(self)
     }
     
@@ -43,13 +43,13 @@ class GameController: NSObject {
             node.removeFromParentNode()
             node.removeAllActions()
         }
-        scene = nil
     }
 }
 
 extension GameController: SCNSceneRendererDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-    
+        lane.update(self)
+//            obstacle.update(self)
     }
 }
 

@@ -23,6 +23,11 @@ class Camera: SCNNode {
         return CGFloat(visibleWidth)
     }
     
+    var lastVisibleZPosition: Float {
+        let viewDistance = Float(camera?.zFar ?? .zero)
+        return position.z + viewDistance
+    }
+    
     func setup(_ gameController: GameController) {
         gameController.scene.rootNode.addChildNode(self)
     }

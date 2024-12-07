@@ -1,65 +1,58 @@
-//
-//  LaneNode.swift
-//  PushatonV2
-//
-//  Created by Wit Owczarek on 04/12/2024.
-//
-
 import Foundation
 import SceneKit
 
 class Lane: SCNNode {
     private var segments: [SCNNode] = []
-    private let segmentLength: Float = 50.0
-    private let numberOfSegments = 3
+    private let segmentLength: Float = 10.0
     
     override init() {
         super.init()
     }
     
     func setup(_ gameController: GameController) {
-        let width = CGFloat(0.4 * gameController.camera.visibleWidth)
-        createInitialSegments(width: width, gameController: gameController)
+        let numberOfSegments = Int(ceil(gameController.camera.lastVisibleZPosition / segmentLength)) + 1
+        for _ in 0..<numberOfSegments {
+            createSegment(gameController)
+        }
         gameController.scene.rootNode.addChildNode(self)
     }
     
-    func createInitialSegments(width: CGFloat, gameController: GameController) {
-        for i in 0..<numberOfSegments {
-            let segment = createSegment(width: width)
-            segment.position.z = Float(i) * -segmentLength
-            addChildNode(segment)
-            segments.append(segment)
+    func update(_ gameController: GameController) {
+        for segment in segments {
+            if segment.position.z > gameController.camera.position.z + segmentLength/2 {
+                segment.position.z = (segments.last?.position.z ?? .zero) - segmentLength
+                segments.removeFirst()
+                segments.append(segment)
+            }
         }
     }
     
-    private func createSegment(width: CGFloat) -> SCNNode {
-        let segmentNode = SCNNode()
-        
-        let laneGeometry = SCNBox(
-            width: width,
-            height: 0.4,
-            length: CGFloat(
-                segmentLength
-            ),
-            chamferRadius: 0
-        )
-        
+    private func createSegment(_ gameController: GameController) {
+        let width = CGFloat(0.4 * gameController.camera.visibleWidth)
+        let laneGeometry = SCNBox(width: width, height: 0.4, length: CGFloat(segmentLength), chamferRadius: 0)
         let material = SCNMaterial()
-        segmentNode.position.y = 0.2
         
         if let texturePath = Bundle.main.path(forResource: "lightgrass", ofType: "png"),
            let texture = UIImage(contentsOfFile: texturePath) {
             material.diffuse.contents = texture
             material.diffuse.wrapT = .repeat
             material.diffuse.wrapS = .repeat
-            material.diffuse.contentsTransform = SCNMatrix4MakeScale(12.5, 12.5, 12.5)
+            material.diffuse.contentsTransform = SCNMatrix4MakeScale(Float(width), 1, segmentLength)
         }
+        
+        let segmentNode = SCNNode(geometry: laneGeometry)
         laneGeometry.materials = [material]
-        let laneNode = SCNNode(geometry: laneGeometry)
-        segmentNode.addChildNode(laneNode)
-        return segmentNode
+        
+        segmentNode.position.y = 0.2
+        segmentNode.position.z = (segments.last?.position.z ?? gameController.camera.position.z) - segmentLength
+        
+        let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
+        segmentNode.runAction(SCNAction.repeatForever(moveAction))
+        
+        segments.append(segmentNode)
+        addChildNode(segmentNode)
     }
-   
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

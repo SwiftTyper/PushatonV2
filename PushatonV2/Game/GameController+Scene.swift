@@ -17,6 +17,7 @@ extension GameController {
         sceneView.allowsCameraControl = false
         sceneView.showsStatistics = true
         sceneView.debugOptions = [.showPhysicsShapes]
+        sceneView.isPlaying = true
         scene.physicsWorld.contactDelegate = self
     }
 }

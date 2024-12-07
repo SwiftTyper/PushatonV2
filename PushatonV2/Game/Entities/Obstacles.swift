@@ -8,76 +8,77 @@
 import Foundation
 import SceneKit
 
-class Obstacle: SCNNode {
-    private var obstacles: [Obstacle] = []
-    private var timer: Timer?
+class Obstacle {
+    private var obstacles: [SCNNode] = []
+    private let lenght: CGFloat = 0.3
     
-    override init() {
-        super.init()
+    init() {
         
+    }
+    
+    func getFucked() -> SCNNode {
         let isLowObstacle = Bool.random()
         let barHeight: Float = isLowObstacle ? 1 : 2
-        let barGeometry = SCNBox(width: 4, height: CGFloat(barHeight), length: 0.3, chamferRadius: 0.05)
+        let barGeometry = SCNBox(width: 4, height: CGFloat(barHeight), length: lenght, chamferRadius: 0.05)
         barGeometry.firstMaterial?.diffuse.contents = isLowObstacle ? UIColor.red : UIColor.yellow
-        
-        let obstacle = SCNNode(geometry: barGeometry)
-        let yPosition: Float = Float(isLowObstacle ? barHeight * 0.5 : 0.5 + 0.1 + (barHeight * 0.5))
-        obstacle.position = SCNVector3(0, yPosition, -30)
+        let node = SCNNode(geometry: barGeometry)
+        node.position = SCNVector3(x: 0, y: Float(isLowObstacle ? barHeight * 0.5 : 0.5 + 0.1 + (barHeight * 0.5)), z: 0)
         
         let physicsShape = SCNPhysicsShape(geometry: barGeometry, options: [
             SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.boundingBox
         ])
         
-        obstacle.physicsBody = SCNPhysicsBody(type: .kinematic, shape: physicsShape)
-        obstacle.physicsBody?.categoryBitMask = CollisionCategory.obstacle.rawValue
-        obstacle.physicsBody?.contactTestBitMask = CollisionCategory.player.rawValue
-        obstacle.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
+        node.physicsBody = SCNPhysicsBody(type: .kinematic, shape: physicsShape)
+        node.physicsBody?.categoryBitMask = CollisionCategory.obstacle.rawValue
+        node.physicsBody?.contactTestBitMask = CollisionCategory.player.rawValue
+        node.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
+        return node
+    }
+    
+    private func createObstacle(_ gameController: GameController) {
+        let newObstacle = getFucked()
+        let spacing: Float = spacing(gameController)
+        let obstacleLength = newObstacle.boundingBox.max.z - newObstacle.boundingBox.min.z
         
-        self.addChildNode(obstacle)
-    }
-    
-    func createObstacles(_ gameController: GameController) {
-        let newObstacle = Obstacle()
         newObstacle.position.y += gameController.lane.boundingBox.max.y
-        let moveForward = SCNAction.moveBy(x: 0, y: 0, z: 40, duration: 2.0)
-        newObstacle.runAction(moveForward)
-        gameController.scene.rootNode.addChildNode(newObstacle)
+        
+        if !obstacles.isEmpty, let startPosition = obstacles.last?.position.z, startPosition < (spacing * 2 + obstacleLength/2) {
+            newObstacle.position.z = startPosition - (spacing + obstacleLength)
+        } else {
+            newObstacle.position.z = -(spacing * 2 + obstacleLength/2)
+        }
+        
         obstacles.append(newObstacle)
+        gameController.scene.rootNode.addChildNode(newObstacle)
     }
-    
-    func removeUnusedObstacles() {
-        obstacles = obstacles.filter { obstacle in
-            if obstacle.position.z > 10 {
+//    
+    func update(_ gameController: GameController) {
+        for obstacle in obstacles {
+            if obstacle.position.z > gameController.camera.position.z + Float(lenght/2) {
+                obstacles.removeFirst()
                 obstacle.removeFromParentNode()
-                return false
+            } else {
+                obstacle.position.z += gameController.speed
             }
-            return true
+        }
+        
+        if (obstacles.last?.position.z ?? .zero) < gameController.camera.lastVisibleZPosition {
+            createObstacle(gameController)
         }
     }
-   
+    
+    func spacing(_ gameController: GameController) -> Float {
+        //MARK: To Do calculate spacing based on speed ensuring jump is always possible
+        return 30
+    }
+    
     func setup(_ gameController: GameController) {
-        createObstacles(gameController)
-        startObstacleSpawnTimer(gameController)
-    }
-    
-    func startObstacleSpawnTimer(_ gameController: GameController) {
-        timer?.invalidate()
-        
-        timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true, block: { timer in
-            guard gameController.state == .playing else { return }
-            self.createObstacles(gameController)
-        })
-    }
-    
-    func cleanup() {
-       timer?.invalidate()
-       timer = nil
-       obstacles.forEach { $0.removeFromParentNode() }
-       obstacles.removeAll()
-    }
-    
-    deinit {
-        cleanup()
+        obstacles = []
+        let segmentLenght = Float(lenght) + spacing(gameController)
+        let numberOfObstacles = Int(ceil(gameController.camera.lastVisibleZPosition / segmentLenght))
+        for _ in 0..<numberOfObstacles {
+            createObstacle(gameController)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
