@@ -94,8 +94,8 @@
             filePath = "PushatonV2/Game/Entities/Obstacles.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
             landmarkName = "createObstacle(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "PushatonV2/Game/Entities/Obstacles.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "update(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -119,16 +119,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "07506AF3-82E8-4DAB-A6A4-765FE460A78D"
+            uuid = "1D57AE87-2FD0-4B32-9C0C-30516A92651C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PushatonV2/Game/Entities/Obstacles.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "setup(_:)"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "update(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

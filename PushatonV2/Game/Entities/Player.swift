@@ -41,7 +41,12 @@ class Player: SCNNode {
         }
     }
     
+    func die() {
+        isManeuvering = false
+    }
+    
     func dash() {
+        guard !isManeuvering else { return }
         isManeuvering = true
         
         self.squashAndUnsquashHeight(durationPerAction: 0.20, intervalBetweenActions: 0.3) {
@@ -51,7 +56,7 @@ class Player: SCNNode {
     
     func setup(_ gameController: GameController) {
         let size: Float = self.boundingBox.max.y - self.boundingBox.min.y
-        position = .init(x: 0, y: gameController.lane.boundingBox.max.y + size/2, z: 0)
+        position = .init(x: 0, y: gameController.lane.segmentHeight + size/2, z: 0)
         gameController.scene.rootNode.addChildNode(self)
     }
     

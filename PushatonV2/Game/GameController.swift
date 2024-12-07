@@ -28,12 +28,11 @@ class GameController: NSObject {
     func initGame() {
         setupScene()
         setupGestures()
-        
         camera.setup(self)
         ground.setup(self)
         lane.setup(self)
         player.setup(self)
-//        obstacle.setup(self)
+        obstacle.setup(self)
         light.setup(self)
     }
     
@@ -43,13 +42,14 @@ class GameController: NSObject {
             node.removeFromParentNode()
             node.removeAllActions()
         }
+        sceneView.isPlaying = false
     }
 }
 
 extension GameController: SCNSceneRendererDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         lane.update(self)
-//            obstacle.update(self)
+        obstacle.update(self)
     }
 }
 
@@ -63,6 +63,7 @@ extension GameController: SCNPhysicsContactDelegate {
         
         if (isPlayerA && nodeB.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) ||
             (isPlayerB && nodeA.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) {
+            self.player.die()
             self.resetGame()
         }
     }

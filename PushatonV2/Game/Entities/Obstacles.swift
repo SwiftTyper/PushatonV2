@@ -10,16 +10,14 @@ import SceneKit
 
 class Obstacle {
     private var obstacles: [SCNNode] = []
-    private let lenght: CGFloat = 0.3
+    private let length: Float = 0.3
     
-    init() {
-        
-    }
+    init() { }
     
-    func getFucked() -> SCNNode {
+    private func createObstacle(_ gameController: GameController) {
         let isLowObstacle = Bool.random()
         let barHeight: Float = isLowObstacle ? 1 : 2
-        let barGeometry = SCNBox(width: 4, height: CGFloat(barHeight), length: lenght, chamferRadius: 0.05)
+        let barGeometry = SCNBox(width: 4, height: CGFloat(barHeight), length: CGFloat(length), chamferRadius: 0.05)
         barGeometry.firstMaterial?.diffuse.contents = isLowObstacle ? UIColor.red : UIColor.yellow
         let node = SCNNode(geometry: barGeometry)
         node.position = SCNVector3(x: 0, y: Float(isLowObstacle ? barHeight * 0.5 : 0.5 + 0.1 + (barHeight * 0.5)), z: 0)
@@ -32,37 +30,33 @@ class Obstacle {
         node.physicsBody?.categoryBitMask = CollisionCategory.obstacle.rawValue
         node.physicsBody?.contactTestBitMask = CollisionCategory.player.rawValue
         node.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
-        return node
-    }
-    
-    private func createObstacle(_ gameController: GameController) {
-        let newObstacle = getFucked()
+        
         let spacing: Float = spacing(gameController)
-        let obstacleLength = newObstacle.boundingBox.max.z - newObstacle.boundingBox.min.z
+        node.position.y += gameController.lane.segmentHeight
         
-        newObstacle.position.y += gameController.lane.boundingBox.max.y
-        
-        if !obstacles.isEmpty, let startPosition = obstacles.last?.position.z, startPosition < (spacing * 2 + obstacleLength/2) {
-            newObstacle.position.z = startPosition - (spacing + obstacleLength)
+        if !obstacles.isEmpty, let startPosition = obstacles.last?.position.z, startPosition < (spacing * 2 + length/2) {
+            node.position.z = startPosition - (spacing + length)
         } else {
-            newObstacle.position.z = -(spacing * 2 + obstacleLength/2)
+            node.position.z = -(spacing * 2 + length/2)
         }
         
-        obstacles.append(newObstacle)
-        gameController.scene.rootNode.addChildNode(newObstacle)
+        let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
+        node.runAction(SCNAction.repeatForever(moveAction))
+        
+        obstacles.append(node)
+        gameController.scene.rootNode.addChildNode(node)
     }
-//    
+    
     func update(_ gameController: GameController) {
         for obstacle in obstacles {
-            if obstacle.position.z > gameController.camera.position.z + Float(lenght/2) {
+            if obstacle.position.z > gameController.camera.position.z + Float(length/2) {
                 obstacles.removeFirst()
+                obstacle.removeAllActions()
                 obstacle.removeFromParentNode()
-            } else {
-                obstacle.position.z += gameController.speed
             }
         }
         
-        if (obstacles.last?.position.z ?? .zero) < gameController.camera.lastVisibleZPosition {
+        if (obstacles.last?.position.z ?? .zero) - spacing(gameController) > -gameController.camera.lastVisibleZPosition {
             createObstacle(gameController)
         }
     }
@@ -73,8 +67,7 @@ class Obstacle {
     }
     
     func setup(_ gameController: GameController) {
-        obstacles = []
-        let segmentLenght = Float(lenght) + spacing(gameController)
+        let segmentLenght = Float(length) + spacing(gameController)
         let numberOfObstacles = Int(ceil(gameController.camera.lastVisibleZPosition / segmentLenght))
         for _ in 0..<numberOfObstacles {
             createObstacle(gameController)
