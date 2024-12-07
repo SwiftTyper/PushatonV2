@@ -24,11 +24,8 @@ extension GameController {
     
     // MARK: - Gesture Handlers
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
-        if state == .menu {
-            state = .playing
-        } else if state == .gameOver {
-            state = .playing
-            initGame()
+        if state == .gameOver {
+            isGameShown = false
         } else if state == .playing {
             player.jump()
         }

@@ -2,15 +2,16 @@ import SwiftUI
 import SceneKit
 
 enum GameState {
-    case menu, playing, gameOver
+    case playing, gameOver
 }
 
 class GameController: NSObject {
+    @Binding var isGameShown: Bool
     var sceneView: SCNView
     var scene: SCNScene!
     
     var speed: Float = 0.15 //m per frame so * 60 to get m/s
-    var state: GameState = .menu
+    var state: GameState = .playing
     
     var camera = Camera()
     var ground = Ground()
@@ -19,8 +20,9 @@ class GameController: NSObject {
     var obstacle = Obstacle()
     var light = Light()
 
-    init(sceneView: SCNView) {
+    init(sceneView: SCNView, isGameShown: Binding<Bool>) {
         self.sceneView = sceneView
+        self._isGameShown = isGameShown
         super.init()
         initGame()
     }
@@ -36,13 +38,17 @@ class GameController: NSObject {
         light.setup(self)
     }
     
-    func resetGame() {
+    func gameOver() {
         state = .gameOver
         scene.rootNode.childNodes.forEach { node in
-            node.removeFromParentNode()
             node.removeAllActions()
         }
         sceneView.isPlaying = false
+        
+        DispatchQueue.main.async {
+            let gameOverView = GameOverView(sceneView: self.sceneView)
+            self.sceneView.addSubview(gameOverView)
+        }
     }
 }
 
@@ -64,7 +70,7 @@ extension GameController: SCNPhysicsContactDelegate {
         if (isPlayerA && nodeB.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) ||
             (isPlayerB && nodeA.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) {
             self.player.die()
-            self.resetGame()
+            self.gameOver()
         }
     }
 }

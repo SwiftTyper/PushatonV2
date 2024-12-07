@@ -10,9 +10,11 @@ import SwiftUI
 import SceneKit
 
 struct GameSceneView: UIViewRepresentable {
+    @Binding var isGameShown: Bool
+    
     func makeUIView(context: Context) -> SCNView {
         let sceneView = SCNView(frame: .zero)
-        let gameController = GameController(sceneView: sceneView)
+        let gameController = GameController(sceneView: sceneView, isGameShown: $isGameShown)
         sceneView.delegate = gameController
         context.coordinator.gameController = gameController
         return sceneView
