@@ -17,22 +17,27 @@ extension GameController {
         swipeDown.direction = .down
         sceneView.addGestureRecognizer(swipeDown)
         
-        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
         swipeUp.direction = .up
         sceneView.addGestureRecognizer(swipeUp)
     }
     
     // MARK: - Gesture Handlers
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
-        if state == .gameOver {
-            isGameShown = false
-        } else if state == .playing {
+        if sceneView.isPlaying {
             player.jump()
+        } else {
+            isGameShown = false
         }
     }
     
+    @objc private func handleSwipeUp(_ gesture: UISwipeGestureRecognizer) {
+        guard sceneView.isPlaying else { return }
+        player.jump()
+    }
+    
     @objc private func handleSwipeDown(_ gesture: UISwipeGestureRecognizer) {
-        guard state == .playing else { return }
+        guard sceneView.isPlaying else { return }
         player.dash()
     }
 }

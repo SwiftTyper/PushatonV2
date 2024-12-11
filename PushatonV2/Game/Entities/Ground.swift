@@ -9,7 +9,6 @@ import Foundation
 import SceneKit
 
 class Ground: SCNNode {
-    
     override init() {
         super.init()
         let floor = SCNFloor()
