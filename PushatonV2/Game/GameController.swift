@@ -10,7 +10,7 @@ class GameController: NSObject {
     var camera = Camera()
     var ground = Ground()
     var lane = Lane()
-    var player = Player()
+    var player = PlayerNode()
     var obstacle = Obstacle()
     var light = Light()
 

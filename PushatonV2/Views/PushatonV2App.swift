@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Amplify
+import AWSCognitoAuthPlugin
+import AWSAPIPlugin
 
 @main
 struct PushatonV2App: App {
@@ -22,6 +24,8 @@ struct PushatonV2App: App {
     
     private func configureAmplify() {
         do {
+            try Amplify.add(plugin: AWSCognitoAuthPlugin())
+            try Amplify.add(plugin: AWSAPIPlugin(modelRegistration: AmplifyModels()))
             try Amplify.configure(with: .amplifyOutputs)
             print("Success")
         } catch {

@@ -9,9 +9,14 @@
 /* Begin PBXBuildFile section */
 		67090AF92D0A36E000A56A6F /* AWSCognitoAuthPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 67090AF82D0A36E000A56A6F /* AWSCognitoAuthPlugin */; };
 		67090AFB2D0A36E000A56A6F /* Amplify in Frameworks */ = {isa = PBXBuildFile; productRef = 67090AFA2D0A36E000A56A6F /* Amplify */; };
+		676DD7C32D0CDE9500AA8DFB /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 676DD7C22D0CDE9500AA8DFB /* AWSAPIPlugin */; };
+		676DD7C72D0CDE9500AA8DFB /* AWSDataStorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 676DD7C62D0CDE9500AA8DFB /* AWSDataStorePlugin */; };
+		676DD7DB2D0CEB7A00AA8DFB /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = 676DD7DA2D0CEB7A00AA8DFB /* amplify_outputs.json */; };
+		676DD7E12D0CF23300AA8DFB /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 676DD7E02D0CF23300AA8DFB /* Authenticator */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		676DD7DA2D0CEB7A00AA8DFB /* amplify_outputs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = amplify_outputs.json; sourceTree = "<group>"; };
 		676FA4722CFD1F2A00665DC8 /* PushatonV2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushatonV2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -28,7 +33,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				676DD7C32D0CDE9500AA8DFB /* AWSAPIPlugin in Frameworks */,
+				676DD7E12D0CF23300AA8DFB /* Authenticator in Frameworks */,
 				67090AF92D0A36E000A56A6F /* AWSCognitoAuthPlugin in Frameworks */,
+				676DD7C72D0CDE9500AA8DFB /* AWSDataStorePlugin in Frameworks */,
 				67090AFB2D0A36E000A56A6F /* Amplify in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -36,11 +44,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		676DD7C12D0CDE9500AA8DFB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		676FA4692CFD1F2A00665DC8 = {
 			isa = PBXGroup;
 			children = (
 				676FA4742CFD1F2A00665DC8 /* PushatonV2 */,
+				676DD7C12D0CDE9500AA8DFB /* Frameworks */,
 				676FA4732CFD1F2A00665DC8 /* Products */,
+				676DD7DA2D0CEB7A00AA8DFB /* amplify_outputs.json */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +91,9 @@
 			packageProductDependencies = (
 				67090AF82D0A36E000A56A6F /* AWSCognitoAuthPlugin */,
 				67090AFA2D0A36E000A56A6F /* Amplify */,
+				676DD7C22D0CDE9500AA8DFB /* AWSAPIPlugin */,
+				676DD7C62D0CDE9500AA8DFB /* AWSDataStorePlugin */,
+				676DD7E02D0CF23300AA8DFB /* Authenticator */,
 			);
 			productName = PushatonV2;
 			productReference = 676FA4722CFD1F2A00665DC8 /* PushatonV2.app */;
@@ -105,6 +125,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				67090AF72D0A36E000A56A6F /* XCRemoteSwiftPackageReference "amplify-swift" */,
+				676DD7DF2D0CF23300AA8DFB /* XCRemoteSwiftPackageReference "amplify-ui-swift-authenticator" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 676FA4732CFD1F2A00665DC8 /* Products */;
@@ -121,6 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				676DD7DB2D0CEB7A00AA8DFB /* amplify_outputs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +378,14 @@
 				minimumVersion = 2.45.2;
 			};
 		};
+		676DD7DF2D0CF23300AA8DFB /* XCRemoteSwiftPackageReference "amplify-ui-swift-authenticator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aws-amplify/amplify-ui-swift-authenticator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -368,6 +398,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 67090AF72D0A36E000A56A6F /* XCRemoteSwiftPackageReference "amplify-swift" */;
 			productName = Amplify;
+		};
+		676DD7C22D0CDE9500AA8DFB /* AWSAPIPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67090AF72D0A36E000A56A6F /* XCRemoteSwiftPackageReference "amplify-swift" */;
+			productName = AWSAPIPlugin;
+		};
+		676DD7C62D0CDE9500AA8DFB /* AWSDataStorePlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67090AF72D0A36E000A56A6F /* XCRemoteSwiftPackageReference "amplify-swift" */;
+			productName = AWSDataStorePlugin;
+		};
+		676DD7E02D0CF23300AA8DFB /* Authenticator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 676DD7DF2D0CF23300AA8DFB /* XCRemoteSwiftPackageReference "amplify-ui-swift-authenticator" */;
+			productName = Authenticator;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

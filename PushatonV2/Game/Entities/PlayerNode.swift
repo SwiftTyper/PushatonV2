@@ -8,7 +8,7 @@
 import Foundation
 import SceneKit
 
-class Player: SCNNode {
+class PlayerNode: SCNNode {
     private var isManeuvering: Bool = false
     
     init(size: CGFloat = 1.0) {

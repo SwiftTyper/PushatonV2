@@ -1,17 +1,44 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
-
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any unauthenticated user can "create", "read", "update", 
 and "delete" any "Todo" records.
 =========================================================================*/
+
+// Define the schema for your backend
 const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.guest()]),
+  Position: a.customType({
+    y: a.float().required(),
+    z: a.float().required()
+  }),
+
+  GameStatus: a.enum([
+    'WAITING',
+    'PLAYING',
+    'FINISHED'
+  ]),
+
+  Game: a.model({
+      player1Id: a.string().required(),
+      player2Id: a.string(),
+      player1Score: a.integer().required().default(0),
+      player2Score: a.integer().required().default(0),
+      status: a.ref('GameStatus'),
+      lastUpdateTime: a.datetime(),
+  })
+  .authorization((allow) => [allow.owner()]),
+
+  Player: a.model({
+    username: a.string().required(),
+    position: a.ref('Position'),
+    currentGameId: a.string(),
+    highScore: a.integer().default(0),
+    isOnline: a.boolean().required().default(false),
+    lastActiveAt: a.datetime(),
+  })
+  .authorization((allow) => [allow.owner()]),
+  // .authorization((allow) => [allow.owner(), allow.publicApiKey().to(['read'])])
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -19,8 +46,8 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
-  },
+    defaultAuthorizationMode: 'userPool'
+  }
 });
 
 /*== STEP 2 ===============================================================
