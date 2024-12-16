@@ -16,9 +16,9 @@ public struct Game: Model {
   public init(id: String = UUID().uuidString,
       player1Id: String,
       player2Id: String? = nil,
-      player1Score: Int,
-      player2Score: Int,
-      status: GameStatus? = nil,
+      player1Score: Int = 0,
+      player2Score: Int = 0,
+      status: GameStatus? = .waiting,
       lastUpdateTime: Temporal.DateTime? = nil) {
     self.init(id: id,
       player1Id: player1Id,

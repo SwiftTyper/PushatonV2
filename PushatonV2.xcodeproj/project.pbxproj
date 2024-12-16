@@ -11,13 +11,13 @@
 		67090AFB2D0A36E000A56A6F /* Amplify in Frameworks */ = {isa = PBXBuildFile; productRef = 67090AFA2D0A36E000A56A6F /* Amplify */; };
 		676DD7C32D0CDE9500AA8DFB /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 676DD7C22D0CDE9500AA8DFB /* AWSAPIPlugin */; };
 		676DD7C72D0CDE9500AA8DFB /* AWSDataStorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 676DD7C62D0CDE9500AA8DFB /* AWSDataStorePlugin */; };
-		676DD7DB2D0CEB7A00AA8DFB /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = 676DD7DA2D0CEB7A00AA8DFB /* amplify_outputs.json */; };
 		676DD7E12D0CF23300AA8DFB /* Authenticator in Frameworks */ = {isa = PBXBuildFile; productRef = 676DD7E02D0CF23300AA8DFB /* Authenticator */; };
+		67E43C6C2D10D96E00F5095D /* amplify_outputs.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E43C6B2D10D96E00F5095D /* amplify_outputs.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		676DD7DA2D0CEB7A00AA8DFB /* amplify_outputs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = amplify_outputs.json; sourceTree = "<group>"; };
 		676FA4722CFD1F2A00665DC8 /* PushatonV2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushatonV2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		67E43C6B2D10D96E00F5095D /* amplify_outputs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = amplify_outputs.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -57,7 +57,7 @@
 				676FA4742CFD1F2A00665DC8 /* PushatonV2 */,
 				676DD7C12D0CDE9500AA8DFB /* Frameworks */,
 				676FA4732CFD1F2A00665DC8 /* Products */,
-				676DD7DA2D0CEB7A00AA8DFB /* amplify_outputs.json */,
+				67E43C6B2D10D96E00F5095D /* amplify_outputs.json */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,7 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				676DD7DB2D0CEB7A00AA8DFB /* amplify_outputs.json in Resources */,
+				67E43C6C2D10D96E00F5095D /* amplify_outputs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

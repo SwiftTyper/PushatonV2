@@ -8,48 +8,36 @@
 import Foundation
 import SwiftUI
 import Amplify
-import Authenticator
 
 struct GameView: View {
+    @Environment(AuthenticationViewModel.self) var authenticationViewModel
+    @State var gameMatchViewModel: GameMatchViewModel = .init()
     @State private var isGameShown = false
-    @State var vm: GameViewModel = .init()
-    
+
     var body: some View {
         if isGameShown {
             GameSceneView(isGameShown: $isGameShown)
                 .ignoresSafeArea(.all)
         } else {
-            Authenticator { state in
                 VStack {
                     Button("Play Again") {
                         self.isGameShown = true
                     }
-                    
-                    Button("Create Game") {
-                        Task { await vm.createGame() }
-                    }
-                    
-                    Button("List Games") {
-                        Task { await vm.listGames() }
-                    }
-                    
+                   
                     Button("Sign Out") {
-                        Task { await state.signOut() }
+                        Task { await authenticationViewModel.signOut() }
                     }
                     
-                    List {
-                        ForEach(vm.games, id: \.id) { game in
-                            Text(game.id)
-                        }
-                        .onDelete { indexSet in
-                            Task { await vm.deleteGames(indexSet: indexSet) }
-                        }
+                    Button("Play") {
+                        Task { await gameMatchViewModel.startMatch(playerId: "") }
                     }
-                    .task {
-                        await vm.listGames()
+                    
+                    if let activeGame = gameMatchViewModel.game {
+                        Text(activeGame.id)
+                        Text(activeGame.player1Id)
+                        Text(activeGame.player2Id ?? "e")
                     }
                 }
-            }
         }
     }
 }
