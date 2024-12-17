@@ -13,38 +13,11 @@ import Amplify
 @MainActor
 @Observable
 class AuthenticationViewModel {
-    var isLoggedIn: Bool = false
-    var unsubscribeToken: UnsubscribeToken?
+    var email: String = ""
+    var username: String = ""
+    var password: String = ""
     
-    init() {
-        self.unsubscribeToken = Amplify.Hub.listen(to: .auth) { [weak self] payload in
-            switch payload.eventName {
-            case HubPayload.EventName.Auth.signedIn:
-                print("User signed in")
-                    self?.isLoggedIn = true
-                
-                // Update UI
-
-            case HubPayload.EventName.Auth.sessionExpired:
-                print("Session expired")
-                    self?.isLoggedIn = false
-                // Re-authenticate the user
-
-            case HubPayload.EventName.Auth.signedOut:
-                print("User signed out")
-                    self?.isLoggedIn = false
-                // Update UI
-
-            case HubPayload.EventName.Auth.userDeleted:
-                print("User deleted")
-                    self?.isLoggedIn = false
-                // Update UI
-
-            default:
-                break
-            }
-        }
-    }
+    var state: AuthStatus = .login
     
     func isUsernameUnique(username: String) -> Bool {
         return true
@@ -71,6 +44,7 @@ class AuthenticationViewModel {
 
             if case let .confirmUser(deliveryDetails, _, userId) = signUpResult.nextStep {
                 print("Delivery details \(String(describing: deliveryDetails)) for userId: \(String(describing: userId)))")
+                state = .codeConfirmation
             } else {
                 print("SignUp Complete")
             }
@@ -78,6 +52,29 @@ class AuthenticationViewModel {
             print("An error occurred while registering a user \(error)")
         } catch {
             print("Unexpected error: \(error)")
+        }
+    }
+    
+    func verifySignUp(for email: String, with confirmationCode: String) async {
+        do {
+            try await getLoggedInUserId()
+            let confirmSignUpResult = try await Amplify.Auth.confirmSignUp(
+                for: email,
+                confirmationCode: confirmationCode
+            )
+            print("Confirm sign up result completed: \(confirmSignUpResult.isSignUpComplete)")
+        } catch let error as AuthError {
+            print("An error occurred while confirming sign up \(error)")
+        } catch {
+            print("Unexpected error: \(error)")
+        }
+    }
+    
+    func resendSignUpCode(email: String) async {
+        do {
+           _ = try await Amplify.Auth.resendSignUpCode(for: email)
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -90,7 +87,8 @@ class AuthenticationViewModel {
             if signInResult.isSignedIn {
                 print("Sign in succeeded")
             } else {
-                print(signInResult)
+              state = .codeConfirmation
+              print(signInResult)
               print("wtf")
             }
         } catch let error as AuthError {
@@ -101,10 +99,18 @@ class AuthenticationViewModel {
     }
     
     func signOut() async {
+       _ = await Amplify.Auth.signOut()
+    }
+    
+    func getLoggedInUserId() async throws -> String {
         do {
-            let result = await Amplify.Auth.signOut()
+            let currentUser = try await Amplify.Auth.getCurrentUser()
+            print(currentUser.username)
+            return currentUser.userId
         } catch {
             print(error.localizedDescription)
+            return ""
         }
     }
+    
 }

@@ -10,16 +10,18 @@ import SwiftUI
 import Authenticator
 
 struct ContentView: View {
-    @State var authenticationViewModel: AuthenticationViewModel = .init()
+    @State private var sessionViewModel: SessionViewModel = .init()
+    @State private var authenticationViewModel: AuthenticationViewModel = .init()
     
     var body: some View {
-        VStack {
-            if authenticationViewModel.isLoggedIn {
-                GameView()
-            } else {
-                LoggedOutView()
+        Group {
+            switch sessionViewModel.state {
+                case .loggedIn: GameView()
+                case .loggedOut: AuthenticationView()
+                case .notDetermined: ProgressView()
             }
         }
+        .environment(sessionViewModel)
         .environment(authenticationViewModel)
     }
 }
