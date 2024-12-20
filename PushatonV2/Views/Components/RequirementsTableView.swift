@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct RequirementRow: View {
-    var requirement: Requirement
+    let requirement: Requirement
     
     var body: some View {
         HStack {
@@ -32,7 +32,7 @@ struct RequirementRow: View {
 }
 
 struct RequirementsTableView: View {
-    var requirements: [Requirement]
+    let requirements: [Requirement]
     
     var body: some View {
         VStack(spacing: 10) {

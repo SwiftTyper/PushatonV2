@@ -168,10 +168,11 @@ extension SignUpView {
     }
         
     private var requirements: [Requirement] {
-        [
-            Requirement(name: "At least 6 characters long", isMet: authenticationViewModel.password.count >= 6),
-            Requirement(name: "At least one special character", isMet: authenticationViewModel.password.contains { $0.isSymbol || $0.isPunctuation || $0.isNumber }),
-            Requirement(name: "Passwords must match", isMet: authenticationViewModel.password == authenticationViewModel.confirmedPassword)
-        ]
+       [
+           Requirement(name: "At least 8 characters long", isMet: authenticationViewModel.password.count >= 8),
+           Requirement(name: "At least one uppercase letter", isMet: authenticationViewModel.password.contains { $0.isUppercase }),
+           Requirement(name: "At least one number and symbol", isMet: authenticationViewModel.password.contains { $0.isNumber } && authenticationViewModel.password.contains { $0.isSymbol }),
+           Requirement(name: "Passwords must match", isMet: authenticationViewModel.password == authenticationViewModel.confirmedPassword)
+       ]
     }
 }
