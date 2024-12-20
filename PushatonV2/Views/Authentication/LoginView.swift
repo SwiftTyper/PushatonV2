@@ -34,7 +34,7 @@ struct LoginView: View {
         .navigationTitle("Log In")
         .navigationBarTitleDisplayMode(.large)
         .navigationDestination(isPresented: $didForgetPassword) {
-            ForgotPasswordView()
+            ForgotPasswordView(email: authenticationViewModel.email)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

@@ -17,7 +17,6 @@ class AuthenticationViewModel {
     var username: String = ""
     var password: String = ""
     var confirmedPassword: String = ""
-    
     var state: AuthStatus = .login
     
     func signUp() async {
@@ -38,15 +37,17 @@ class AuthenticationViewModel {
 
             if signUpResult.isSignUpComplete {
                 reset()
+                state = .login
             } else {
                 state = .verifyCode
             }
         } catch let error as AuthError{
             AlertManager.presentAlert(message: error.errorDescription)
+            state = .login
         } catch {
             AlertManager.presentAlert()
+            state = .login
         }
-        state = .login
     }
     
     func verifySignUp(with confirmationCode: String) async {
@@ -89,15 +90,17 @@ class AuthenticationViewModel {
             )
             if signInResult.isSignedIn {
                 reset()
+                state = .login
             } else {
                 state = .verifyCode
             }
         } catch let error as AuthError{
             AlertManager.presentAlert(message: error.errorDescription)
+            state = .login
         } catch {
             AlertManager.presentAlert()
+            state = .login
         }
-        state = .login
     }
     
     func isUsernameUnique(username: String) -> Bool {
@@ -113,9 +116,20 @@ class AuthenticationViewModel {
     }
     
     func signOut() async {
-        state = .loading
        _ = await Amplify.Auth.signOut()
     }
+    
+//    func checkIfUserVerifiedAccount() async {
+//        do {
+//            _ = try await Amplify.Auth.getCurrentUser()
+//        } catch let error as AuthError {
+//            if error == AuthError.configuration("", "", nil) {
+//                state = .verifyCode
+//            }
+//        } catch {
+//            print(error)
+//        }
+//    }
     
 //    func getLoggedInUserId() async throws -> String {
 //        do {
