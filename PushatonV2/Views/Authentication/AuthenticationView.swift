@@ -12,20 +12,24 @@ struct AuthenticationView: View {
     @Environment(AuthenticationViewModel.self) var authenticationViewModel
     
     var body: some View {
-        if authenticationViewModel.state == .codeConfirmation {
-            VerificationView { code in
-                Task {
-                    await authenticationViewModel.verifySignUp(for: "email", with: code)
-                }
-            } resendAction: {
-                Task {
-                    await authenticationViewModel.resendSignUpCode(email: "email")
+        NavigationStack {
+            if authenticationViewModel.state == .login {
+                LoginView()
+            } else if authenticationViewModel.state == .signup {
+                SignUpView()
+            } else {
+                VerificationView { code in
+                    Task {
+                        await authenticationViewModel.verifySignUp(with: code)
+                    }
+                } resendAction: {
+                    Task {
+                        await authenticationViewModel.resendSignUpCode()
+                    }
                 }
             }
-        } else if authenticationViewModel.state == .login {
-            LoginView()
-        } else {
-            SignUpView()
         }
+        .overlay { if authenticationViewModel.isLoading { ProgressView() }}
+        .environment(authenticationViewModel)
     }
 }

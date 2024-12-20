@@ -6,3 +6,17 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct ShowAuthenticationIfNeededModifier: ViewModifier {
+    @Environment(SessionViewModel.self) var sessionViewModel
+    
+    func body(content: Content) -> some View {
+        content
+            .sheet(isPresented: .constant(sessionViewModel.state == .loggedOut)) {
+                AuthenticationView()
+                    .interactiveDismissDisabled()
+            }
+    }
+}
+

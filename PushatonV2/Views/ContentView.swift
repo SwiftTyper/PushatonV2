@@ -17,10 +17,10 @@ struct ContentView: View {
         Group {
             switch sessionViewModel.state {
                 case .loggedIn: GameView()
-                case .loggedOut: AuthenticationView()
-                case .notDetermined: ProgressView()
+                default: ProgressView()
             }
         }
+        .modifier(ShowAuthenticationIfNeededModifier())
         .environment(sessionViewModel)
         .environment(authenticationViewModel)
     }

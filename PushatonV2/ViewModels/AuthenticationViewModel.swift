@@ -16,18 +16,25 @@ class AuthenticationViewModel {
     var email: String = ""
     var username: String = ""
     var password: String = ""
+    var confirmedPassword: String = ""
     
     var state: AuthStatus = .login
+    var isLoading: Bool = false
     
     func isUsernameUnique(username: String) -> Bool {
         return true
     }
     
-    func signUp(
-        username: String,
-        password: String,
-        email: String
-    ) async {
+    func reset() {
+        email = ""
+        username = ""
+        password = ""
+        confirmedPassword = ""
+        state = .login
+    }
+    
+    func signUp() async {
+        isLoading = true
         do {
             guard isUsernameUnique(username: username) else {
                 return
@@ -43,63 +50,73 @@ class AuthenticationViewModel {
             )
 
             if case let .confirmUser(deliveryDetails, _, userId) = signUpResult.nextStep {
-                print("Delivery details \(String(describing: deliveryDetails)) for userId: \(String(describing: userId)))")
-                state = .codeConfirmation
+                state = .verifyCode
             } else {
-                print("SignUp Complete")
+                reset()
             }
-        } catch let error as AuthError {
-            print("An error occurred while registering a user \(error)")
         } catch {
-            print("Unexpected error: \(error)")
+            
         }
+        isLoading = false
     }
     
-    func verifySignUp(for email: String, with confirmationCode: String) async {
+    func verifySignUp(with confirmationCode: String) async {
+        isLoading = true
         do {
-            try await getLoggedInUserId()
             let confirmSignUpResult = try await Amplify.Auth.confirmSignUp(
                 for: email,
                 confirmationCode: confirmationCode
             )
+            
+            if confirmSignUpResult.isSignUpComplete {
+                reset()
+            }
             print("Confirm sign up result completed: \(confirmSignUpResult.isSignUpComplete)")
         } catch let error as AuthError {
             print("An error occurred while confirming sign up \(error)")
         } catch {
             print("Unexpected error: \(error)")
         }
+        isLoading = false
     }
     
-    func resendSignUpCode(email: String) async {
+    func resendSignUpCode() async {
+        isLoading = true
         do {
            _ = try await Amplify.Auth.resendSignUpCode(for: email)
         } catch {
             print(error.localizedDescription)
         }
+        isLoading = false
     }
     
-    func signIn(email: String, password: String) async {
+    func signIn() async {
+        isLoading = true
         do {
             let signInResult = try await Amplify.Auth.signIn(
                 username: email,
                 password: password
             )
             if signInResult.isSignedIn {
+                reset()
                 print("Sign in succeeded")
             } else {
-              state = .codeConfirmation
-              print(signInResult)
-              print("wtf")
+                state = .verifyCode
+                print(signInResult)
+                print("wtf")
             }
         } catch let error as AuthError {
             print("Sign in failed \(error)")
         } catch {
             print("Unexpected error: \(error)")
         }
+        isLoading = false
     }
     
     func signOut() async {
+        isLoading = true
        _ = await Amplify.Auth.signOut()
+        isLoading = false
     }
     
     func getLoggedInUserId() async throws -> String {
@@ -112,5 +129,4 @@ class AuthenticationViewModel {
             return ""
         }
     }
-    
 }

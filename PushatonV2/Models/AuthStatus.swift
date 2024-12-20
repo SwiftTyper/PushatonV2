@@ -10,5 +10,5 @@ import Foundation
 enum AuthStatus {
     case login
     case signup
-    case codeConfirmation
+    case verifyCode
 }
