@@ -11,4 +11,5 @@ enum AuthStatus {
     case login
     case signup
     case verifyCode
+    case loading
 }
