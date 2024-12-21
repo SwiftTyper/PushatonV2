@@ -27,32 +27,29 @@ struct LoginView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 0){
-            form
-            bottomToolbar
-        }
-        .navigationTitle("Log In")
-        .navigationBarTitleDisplayMode(.large)
-        .navigationDestination(isPresented: $didForgetPassword) {
-            ForgotPasswordView(email: authenticationViewModel.email)
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                }
-                .buttonStyle(TertiaryButtonStyle())
+        form
+            .safeAreaInset(edge: .bottom) { bottomToolbar }
+            .navigationTitle("Log In")
+            .navigationDestination(isPresented: $didForgetPassword) {
+                ForgotPasswordView(email: authenticationViewModel.email)
             }
-        }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .buttonStyle(TertiaryButtonStyle())
+                }
+            }
     }
 }
 
 extension LoginView {
     var form: some View {
         @Bindable var authenticationViewModel = authenticationViewModel
-        return GeometryReader { geo in
+        return ScrollView {
             VStack(alignment: .center, spacing: 30) {
                 VStack(alignment: .center, spacing: 14) {
                     LimitedTextField(

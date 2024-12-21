@@ -19,30 +19,27 @@ struct SignUpView: View {
     @State private var isPasswordHidden: Bool = true
 
     var body: some View {
-        VStack(alignment: .center, spacing: 0){
-            form
-            bottomToolbar
-        }
-        .navigationTitle("Create your Account")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    HapticManager.shared.impact(style: .medium)
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Image(systemName: "xmark")
+        form
+            .safeAreaInset(edge: .bottom) { bottomToolbar }
+            .navigationTitle("Create your Account")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        HapticManager.shared.impact(style: .medium)
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .buttonStyle(TertiaryButtonStyle())
                 }
-                .buttonStyle(TertiaryButtonStyle())
             }
-        }
     }
 }
 
 extension SignUpView {
     var form: some View {
         @Bindable var authenticationViewModel = authenticationViewModel
-        return GeometryReader { geo in
+        return ScrollView {
             VStack(alignment: .center, spacing: 30) {
                 VStack(alignment: .leading, spacing: 14) {
                     LimitedTextField(
