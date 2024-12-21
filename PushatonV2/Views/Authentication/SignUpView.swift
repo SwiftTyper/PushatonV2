@@ -16,7 +16,6 @@ struct SignUpView: View {
     @State private var usernameFocused: Bool = false
     @State private var passwordFocused: Bool = false
     @State private var confimedPasswordFocused: Bool = false
-    
     @State private var isPasswordHidden: Bool = true
 
     var body: some View {
@@ -45,7 +44,7 @@ extension SignUpView {
         @Bindable var authenticationViewModel = authenticationViewModel
         return GeometryReader { geo in
             VStack(alignment: .center, spacing: 30) {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 14) {
                     LimitedTextField(
                         text: $authenticationViewModel.email,
                         focused: $emailFocused,
@@ -171,7 +170,7 @@ extension SignUpView {
        [
            Requirement(name: "At least 8 characters long", isMet: authenticationViewModel.password.count >= 8),
            Requirement(name: "At least one uppercase letter", isMet: authenticationViewModel.password.contains { $0.isUppercase }),
-           Requirement(name: "At least one number and symbol", isMet: authenticationViewModel.password.contains { $0.isNumber } && authenticationViewModel.password.contains { $0.isSymbol }),
+           Requirement(name: "At least one number and symbol", isMet: authenticationViewModel.password.contains { $0.isNumber } && authenticationViewModel.password.contains { $0.isActualSymbol }),
            Requirement(name: "Passwords must match", isMet: authenticationViewModel.password == authenticationViewModel.confirmedPassword)
        ]
     }

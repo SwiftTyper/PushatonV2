@@ -22,9 +22,18 @@ struct ResetPasswordView: View {
     
     private var requirements: [Requirement] {
        [
-            Requirement(name: "At least 8 characters long", isMet: viewModel.newPassword.count >= 8),
-            Requirement(name: "At least one uppercase letter", isMet: viewModel.newPassword.contains { $0.isUppercase }),
-            Requirement(name: "At least one number and symbol", isMet: viewModel.newPassword.contains { $0.isNumber } && viewModel.newPassword.contains { $0.isSymbol })
+            Requirement(
+                name: "At least 8 characters long",
+                isMet: viewModel.newPassword.count >= 8
+            ),
+            Requirement(
+                name: "At least one uppercase letter",
+                isMet: viewModel.newPassword.contains { $0.isUppercase}
+            ),
+            Requirement(
+                name: "At least one number and symbol",
+                isMet: viewModel.newPassword.contains { $0.isNumber } && viewModel.newPassword.contains { $0.isActualSymbol }
+            )
        ]
     }
 
@@ -68,7 +77,7 @@ extension ResetPasswordView {
                         .fixedSize(horizontal: false, vertical: true)
                         .layoutPriority(2)
 
-                    VStack(alignment: .center, spacing: 16) {
+                    VStack(alignment: .center, spacing: 14) {
                         LimitedTextField(
                             text: $viewModel.email,
                             focused: $focused,

@@ -23,6 +23,7 @@ struct LimitedTextFieldStyle: ViewModifier {
                     Image(systemName: "eye")
                         .symbolVariant(isPasswordHidden ? .slash : .none)
                         .contentTransition(.symbolEffect)
+                        .animation(.easeInOut(duration: 0.2), value: isPasswordHidden)
                 }
             }
         }

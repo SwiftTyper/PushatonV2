@@ -54,7 +54,7 @@ extension LoginView {
         @Bindable var authenticationViewModel = authenticationViewModel
         return GeometryReader { geo in
             VStack(alignment: .center, spacing: 30) {
-                VStack(alignment: .center, spacing: 16) {
+                VStack(alignment: .center, spacing: 14) {
                     LimitedTextField(
                         text: $authenticationViewModel.email,
                         focused: $emailFocus,
