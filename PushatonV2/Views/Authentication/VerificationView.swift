@@ -42,40 +42,48 @@ struct VerificationView: View {
                     .frame(width: 40)
                 }
             }
-            
-            Button {
-                let code = String(fields.reduce("", +))
-                verifyAction(code)
-            } label: {
-                Text("Verify")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .padding(.vertical, 12)
-                    .frame(maxWidth: .infinity)
-                    .background { RoundedRectangle(cornerRadius: 10, style: .continuous).fill(.blue) }
-            }
-            .disabled(checkStates())
-            .opacity(checkStates() ? 0.4 : 1)
-            .padding(.vertical)
-            
-            HStack(spacing: 12) {
-                Text("Didn't receive code?")
-                    .font(.footnote)
-                    .foregroundStyle(.gray)
-                
-                Button("Resend") {
-                    resendAction()
-                }
-                .font(.callout)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding()
-        .frame(maxHeight: .infinity, alignment: .top)
+        .frame(maxHeight: .infinity, alignment: .center)
+        .safeAreaInset(edge: .bottom) { bottomToolbar }
         .navigationTitle("Code Verification")
         .onChange(of: fields) { oldValue, newValue in
             optCondition(value: newValue)
         }
+    }
+}
+
+extension VerificationView {
+    var bottomToolbar: some View {
+        VStack(alignment: .center, spacing: 15){
+            Divider()
+        
+            VStack(alignment: .center, spacing: 24) {
+                Button {
+                    let code = String(fields.reduce("", +))
+                    verifyAction(code)
+                } label: {
+                    Text("Verify")
+                }
+                .disabled(checkStates())
+                .buttonStyle(PrimaryButtonStyle(isDisabled: checkStates()))
+                
+                if activeField == nil {
+                    HStack {
+                        Text("Didn't receive code?")
+                            .font(.body)
+                            .foregroundStyle(Color.secondary)
+                        
+                        Button("Resend") {
+                            resendAction()
+                        }
+                        .buttonStyle(TertiaryButtonStyle())
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, activeField != nil ? 15 : 30)
+        }
+        .background(Color(UIColor.systemBackground))
     }
 }
 
@@ -129,8 +137,10 @@ extension VerificationView {
 }
 
 #Preview {
-    VerificationView(
-        verifyAction: { _ in },
-        resendAction: {}
-    )
+    NavigationStack {
+        VerificationView(
+            verifyAction: { _ in },
+            resendAction: {}
+        )
+    }
 }

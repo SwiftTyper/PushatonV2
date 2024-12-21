@@ -25,20 +25,17 @@ class SessionViewModel {
         Amplify.Hub.publisher(for: .auth)
              .sink { [weak self] payload in
                  switch payload.eventName {
-                 case HubPayload.EventName.Auth.signedIn:
+                     case HubPayload.EventName.Auth.signedIn:
                         self?.state = .loggedIn
-                     print("User signed in")
-                     
-                 case HubPayload.EventName.Auth.signedOut:
+                         print("User signed in")
+                     case HubPayload.EventName.Auth.signedOut:
                          self?.state = .loggedOut
-                     print("User signed out")
-                     
-                 case HubPayload.EventName.Auth.sessionExpired:
+                         print("User signed out")
+                     case HubPayload.EventName.Auth.sessionExpired:
                          self?.state = .loggedOut
-                     print("Session expired")
-                     
-                 default:
-                     break
+                         print("Session expired")
+                     default:
+                         break
                  }
              }
              .store(in: &cancellables)
