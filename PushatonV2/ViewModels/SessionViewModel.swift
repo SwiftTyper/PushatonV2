@@ -13,7 +13,7 @@ import Combine
 @MainActor
 @Observable
 class SessionViewModel {
-    var state: LoginStatus = .loggedOut
+    var state: LoginStatus = .notDetermined
     private var cancellables: Set<AnyCancellable> = []
     
     init() {

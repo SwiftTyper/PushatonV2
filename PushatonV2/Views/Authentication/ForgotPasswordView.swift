@@ -33,6 +33,7 @@ struct ForgotPasswordView: View {
                             await viewModel.resetPassword()
                         }
                     }
+                case .loading: ProgressView()
             }
         }
         .environment(viewModel)

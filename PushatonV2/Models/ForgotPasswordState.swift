@@ -10,4 +10,5 @@ import Foundation
 enum ForgotPasswordState {
     case resetPassword
     case verifyCode
+    case loading
 }

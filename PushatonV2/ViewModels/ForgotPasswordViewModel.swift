@@ -22,17 +22,21 @@ class ForgotPasswordViewModel {
     }
     
     func resetPassword() async {
+        state = .loading
         do {
             let resetResult = try await Amplify.Auth.resetPassword(for: email)
             switch resetResult.nextStep {
-                case .confirmResetPasswordWithCode(let deliveryDetails, let info):
+                case .confirmResetPasswordWithCode(_, _):
                     state = .verifyCode
-                case .done: return
+                case .done:
+                    state = .resetPassword
             }
         } catch let error as AuthError {
             AlertManager.presentAlert(message: error.errorDescription)
+            state = .resetPassword
         } catch {
             AlertManager.presentAlert()
+            state = .resetPassword
         }
     }
     
@@ -40,6 +44,7 @@ class ForgotPasswordViewModel {
         with code: String,
         onSuccess: @escaping () -> Void
     ) async {
+        state = .loading
         do {
             try await Amplify.Auth.confirmResetPassword(
                 for: email,
@@ -52,5 +57,6 @@ class ForgotPasswordViewModel {
         } catch {
             AlertManager.presentAlert()
         }
+        state = .resetPassword
     }
 }
