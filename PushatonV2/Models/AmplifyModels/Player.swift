@@ -3,49 +3,49 @@ import Amplify
 import Foundation
 
 public struct Player: Model {
-  public let id: String
-  public var username: String
-  public var position: Position?
+  public let username: String
   public var currentGameId: String?
-  public var highScore: Int?
+  public var position: Position?
+  public var highScore: Int
+  public var score: Int
+  public var isAlive: Bool
   public var isOnline: Bool
-  public var lastActiveAt: Temporal.DateTime?
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
-  public init(id: String = UUID().uuidString,
-      username: String,
-      position: Position? = nil,
+  public init(username: String,
       currentGameId: String? = nil,
-      highScore: Int? = nil,
-      isOnline: Bool,
-      lastActiveAt: Temporal.DateTime? = nil) {
-    self.init(id: id,
-      username: username,
-      position: position,
+      position: Position? = nil,
+      highScore: Int,
+      score: Int,
+      isAlive: Bool,
+      isOnline: Bool) {
+    self.init(username: username,
       currentGameId: currentGameId,
+      position: position,
       highScore: highScore,
+      score: score,
+      isAlive: isAlive,
       isOnline: isOnline,
-      lastActiveAt: lastActiveAt,
       createdAt: nil,
       updatedAt: nil)
   }
-  internal init(id: String = UUID().uuidString,
-      username: String,
-      position: Position? = nil,
+  internal init(username: String,
       currentGameId: String? = nil,
-      highScore: Int? = nil,
+      position: Position? = nil,
+      highScore: Int,
+      score: Int,
+      isAlive: Bool,
       isOnline: Bool,
-      lastActiveAt: Temporal.DateTime? = nil,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
-      self.id = id
       self.username = username
-      self.position = position
       self.currentGameId = currentGameId
+      self.position = position
       self.highScore = highScore
+      self.score = score
+      self.isAlive = isAlive
       self.isOnline = isOnline
-      self.lastActiveAt = lastActiveAt
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }

@@ -34,7 +34,8 @@ class GameMatchViewModel {
     func createGame(playerId: String) async throws -> Game {
         let game = Game(
             id: UUID().uuidString,
-            player1Id: playerId
+            player1Id: playerId,
+            status: .waiting
         )
         let result = try await Amplify.API.mutate(request: .create(game))
         return try result.get()

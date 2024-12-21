@@ -8,10 +8,8 @@ extension Game {
     case id
     case player1Id
     case player2Id
-    case player1Score
-    case player2Score
     case status
-    case lastUpdateTime
+    case winner
     case createdAt
     case updatedAt
   }
@@ -23,13 +21,14 @@ extension Game {
     let game = Game.keys
     
     model.authRules = [
-      rule(allow: .owner, ownerField: "owner", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read])
+      rule(allow: .private, operations: [.create, .update, .delete, .read])
     ]
     
     model.listPluralName = "Games"
     model.syncPluralName = "Games"
     
     model.attributes(
+      .index(fields: ["id"], name: nil),
       .primaryKey(fields: [game.id])
     )
     
@@ -37,11 +36,9 @@ extension Game {
       .field(game.id, is: .required, ofType: .string),
       .field(game.player1Id, is: .required, ofType: .string),
       .field(game.player2Id, is: .optional, ofType: .string),
-      .field(game.player1Score, is: .required, ofType: .int),
-      .field(game.player2Score, is: .required, ofType: .int),
-      .field(game.status, is: .optional, ofType: .enum(type: GameStatus.self)),
-      .field(game.lastUpdateTime, is: .optional, ofType: .dateTime),
-      .field(game.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
+      .field(game.status, is: .required, ofType: .enum(type: GameStatus.self)),
+      .field(game.winner, is: .optional, ofType: .string),
+      .field(game.createdAt, is: .optional, ofType: .dateTime),
       .field(game.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
     }
@@ -64,14 +61,8 @@ extension ModelPath where ModelType == Game {
   public var player2Id: FieldPath<String>   {
       string("player2Id") 
     }
-  public var player1Score: FieldPath<Int>   {
-      int("player1Score") 
-    }
-  public var player2Score: FieldPath<Int>   {
-      int("player2Score") 
-    }
-  public var lastUpdateTime: FieldPath<Temporal.DateTime>   {
-      datetime("lastUpdateTime") 
+  public var winner: FieldPath<String>   {
+      string("winner") 
     }
   public var createdAt: FieldPath<Temporal.DateTime>   {
       datetime("createdAt") 

@@ -13,7 +13,7 @@ const schema = a.schema({
   ]),
 
   Game: a.model({
-    id: a.id(),
+    id: a.id().required(),
     player1Id: a.string().required(),
     player2Id: a.string(),
     status: a.ref('GameStatus').required(),
@@ -29,7 +29,7 @@ const schema = a.schema({
     username: a.string().required(),
     currentGameId: a.string(),
     position: a.ref('Position'),
-    highScore: a.integer().default(0),
+    highScore: a.integer().required().default(0),
     score: a.integer().required().default(0),
     isAlive: a.boolean().required().default(true),
     isOnline: a.boolean().required().default(false),

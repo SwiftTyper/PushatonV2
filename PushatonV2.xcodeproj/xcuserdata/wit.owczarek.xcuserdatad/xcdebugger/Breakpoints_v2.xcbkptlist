@@ -231,17 +231,89 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2BC9833D-361B-43C0-AF7E-897BB70E8941"
+            uuid = "885685D0-6000-400F-BDC8-82AE224EA76B"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PushatonV2/ViewModels/AuthenticationViewModel.swift"
+            filePath = "PushatonV2/ViewModels/SessionViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "AuthenticationViewModel"
-            landmarkType = "3">
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "createPlayerIfMissing()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "885685D0-6000-400F-BDC8-82AE224EA76B - ae50af417eccd29e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for PushatonV2.SessionViewModel.createPlayerIfMissing() async throws -&gt; ()"
+                  moduleName = "PushatonV2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/SessionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66">
+               </Location>
+               <Location
+                  uuid = "885685D0-6000-400F-BDC8-82AE224EA76B - edc6465b9b3d6aaa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) await resume partial function for PushatonV2.SessionViewModel.createPlayerIfMissing() async throws -&gt; ()"
+                  moduleName = "PushatonV2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/SessionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66">
+               </Location>
+               <Location
+                  uuid = "885685D0-6000-400F-BDC8-82AE224EA76B - 4706722c77e5ee9c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for PushatonV2.SessionViewModel.createPlayerIfMissing() async throws -&gt; ()"
+                  moduleName = "PushatonV2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/SessionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66">
+               </Location>
+               <Location
+                  uuid = "885685D0-6000-400F-BDC8-82AE224EA76B - 786a174a5a5a66b1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(9) suspend resume partial function for PushatonV2.SessionViewModel.createPlayerIfMissing() async throws -&gt; ()"
+                  moduleName = "PushatonV2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/SessionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65">
+               </Location>
+               <Location
+                  uuid = "885685D0-6000-400F-BDC8-82AE224EA76B - 786a174a5a5a6690"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(9) suspend resume partial function for PushatonV2.SessionViewModel.createPlayerIfMissing() async throws -&gt; ()"
+                  moduleName = "PushatonV2.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/SessionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -5,13 +5,13 @@ import Foundation
 extension Player {
   // MARK: - CodingKeys 
    public enum CodingKeys: String, ModelKey {
-    case id
     case username
-    case position
     case currentGameId
+    case position
     case highScore
+    case score
+    case isAlive
     case isOnline
-    case lastActiveAt
     case createdAt
     case updatedAt
   }
@@ -23,24 +23,27 @@ extension Player {
     let player = Player.keys
     
     model.authRules = [
-      rule(allow: .owner, ownerField: "owner", identityClaim: "cognito:username", provider: .userPools, operations: [.create, .update, .delete, .read])
+      rule(allow: .public, provider: .iam, operations: [.read]),
+      rule(allow: .private, operations: [.create, .read]),
+      rule(allow: .owner, ownerField: "owner", identityClaim: "cognito:username", provider: .userPools, operations: [.update, .delete])
     ]
     
     model.listPluralName = "Players"
     model.syncPluralName = "Players"
     
     model.attributes(
-      .primaryKey(fields: [player.id])
+      .index(fields: ["username"], name: nil),
+      .primaryKey(fields: [player.username])
     )
     
     model.fields(
-      .field(player.id, is: .required, ofType: .string),
       .field(player.username, is: .required, ofType: .string),
-      .field(player.position, is: .optional, ofType: .embedded(type: Position.self)),
       .field(player.currentGameId, is: .optional, ofType: .string),
-      .field(player.highScore, is: .optional, ofType: .int),
+      .field(player.position, is: .optional, ofType: .embedded(type: Position.self)),
+      .field(player.highScore, is: .required, ofType: .int),
+      .field(player.score, is: .required, ofType: .int),
+      .field(player.isAlive, is: .required, ofType: .bool),
       .field(player.isOnline, is: .required, ofType: .bool),
-      .field(player.lastActiveAt, is: .optional, ofType: .dateTime),
       .field(player.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(player.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
@@ -51,13 +54,16 @@ extension Player {
 }
 
 extension Player: ModelIdentifiable {
-  public typealias IdentifierFormat = ModelIdentifierFormat.Default
-  public typealias IdentifierProtocol = DefaultModelIdentifier<Self>
+  public typealias IdentifierFormat = ModelIdentifierFormat.Custom
+  public typealias IdentifierProtocol = ModelIdentifier<Self, ModelIdentifierFormat.Custom>
+}
+
+extension Player.IdentifierProtocol {
+  public static func identifier(username: String) -> Self {
+    .make(fields:[(name: "username", value: username)])
+  }
 }
 extension ModelPath where ModelType == Player {
-  public var id: FieldPath<String>   {
-      string("id") 
-    }
   public var username: FieldPath<String>   {
       string("username") 
     }
@@ -67,11 +73,14 @@ extension ModelPath where ModelType == Player {
   public var highScore: FieldPath<Int>   {
       int("highScore") 
     }
+  public var score: FieldPath<Int>   {
+      int("score") 
+    }
+  public var isAlive: FieldPath<Bool>   {
+      bool("isAlive") 
+    }
   public var isOnline: FieldPath<Bool>   {
       bool("isOnline") 
-    }
-  public var lastActiveAt: FieldPath<Temporal.DateTime>   {
-      datetime("lastActiveAt") 
     }
   public var createdAt: FieldPath<Temporal.DateTime>   {
       datetime("createdAt") 

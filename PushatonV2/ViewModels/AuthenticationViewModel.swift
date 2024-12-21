@@ -22,7 +22,7 @@ class AuthenticationViewModel {
     func signUp() async {
         state = .loading
         do {
-            guard isUsernameUnique(username: username) else {
+            guard try await !PlayerManager.doesPlayerExist(username: username) else {
                 return
             }
             let userAttributes = [AuthUserAttribute(.preferredUsername, value: username)]
@@ -102,11 +102,7 @@ class AuthenticationViewModel {
             state = .login
         }
     }
-    
-    func isUsernameUnique(username: String) -> Bool {
-        return true
-    }
-    
+  
     func reset() {
         email = ""
         username = ""
