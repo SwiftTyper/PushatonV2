@@ -73,10 +73,11 @@ extension VerificationView {
                             .font(.body)
                             .foregroundStyle(Color.secondary)
                         
-                        Button("Resend") {
+                        CountdownThrottledButton {
                             resendAction()
+                        } label: {
+                            Text("Resend")
                         }
-                        .buttonStyle(TertiaryButtonStyle())
                     }
                 }
             }
