@@ -13,25 +13,67 @@ import Amplify
 @Observable
 class GameMatchViewModel {
     var game: Game? = nil
+    var games: [Game] = []
+    var subscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
+    
+    deinit {
+        Task {
+            await self.cancelSubscription()
+        }
+    }
     
     func startMatch(playerId: String) async {
         do {
-            if let existingGame = try await getQueuedGames() {
-                try await joinGame(id: existingGame.id, playerId: playerId)
-                self.game = existingGame
+            if let existingGame = try await getQueuedGame() {
+                self.game = try await joinGame(existingGame, playerId: playerId)
             } else {
                 self.game = try await createGame(playerId: playerId)
             }
+            createSubscription()
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func joinGame(id: String, playerId: String) async throws {
-        
+    private func cancelSubscription() {
+        subscription?.cancel()
     }
     
-    func createGame(playerId: String) async throws -> Game {
+    private func createSubscription() {
+        subscription = Amplify.API.subscribe(request: .subscription(of: Game.self, type: .onUpdate))
+        guard let subscription = subscription else { return }
+        Task {
+            do {
+                for try await subscriptionEvent in subscription {
+                    switch subscriptionEvent {
+                    case .connection(let subscriptionConnectionState):
+                        print("Subscription connect state is \(subscriptionConnectionState)")
+                    case .data(let result):
+                        switch result {
+                            case .success(let updatedGame):
+                                print("Successfully got todo from subscription: \(updatedGame)")
+                                self.game = updatedGame
+                            case .failure(let error):
+                                print("Got failed result with \(error.errorDescription)")
+                        }
+                    }
+                }
+            } catch {
+                print("Subscription has terminated with \(error)")
+            }
+        }
+    }
+    
+    private func joinGame(_ game: Game, playerId: String) async throws -> Game {
+        var game = game
+        game.player2Id = playerId
+        game.status = .playing
+        
+        let result = try await Amplify.API.query(request: .update(game))
+        return try result.get()
+    }
+    
+    private func createGame(playerId: String) async throws -> Game {
         let game = Game(
             id: UUID().uuidString,
             player1Id: playerId,
@@ -41,8 +83,8 @@ class GameMatchViewModel {
         return try result.get()
     }
     
-    func getQueuedGames() async throws -> Game? {
-        let predicate = QueryPredicateOperation(field: "status", operator: .equals(GameStatus.waiting as? Persistable))
+    private func getQueuedGame() async throws -> Game? {
+        let predicate = QueryPredicateOperation(field: "status", operator: .equals(GameStatus.waiting.rawValue))
         let request = GraphQLRequest<Game>.list(
             Game.self,
             where: predicate,
@@ -54,5 +96,27 @@ class GameMatchViewModel {
     
     func leaveGame() {
         
+    }
+    
+    func listGames() async throws -> [Game] {
+        let result = try await Amplify.API.query(request: .list(Game.self))
+        return try result.get().elements
+    }
+    
+    func clearGames() async {
+        do {
+            // First get all games
+            let games = try await Amplify.API.query(request: .list(Game.self))
+            let gameList = try games.get()
+            
+            // Delete each game
+            for game in gameList {
+                _ = try await Amplify.API.mutate(request: .delete(game))
+                print("Deleted game with ID: \(game.id)")
+            }
+            
+        } catch {
+            print("Error clearing games: \(error)")
+        }
     }
 }

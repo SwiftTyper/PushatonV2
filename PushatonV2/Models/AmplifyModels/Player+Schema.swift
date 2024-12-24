@@ -25,7 +25,7 @@ extension Player {
     model.authRules = [
       rule(allow: .public, provider: .iam, operations: [.read]),
       rule(allow: .private, operations: [.create, .read]),
-      rule(allow: .owner, ownerField: "owner", identityClaim: "cognito:username", provider: .userPools, operations: [.update, .delete])
+      rule(allow: .owner, ownerField: "owner", identityClaim: "cognito:username", provider: .userPools, operations: [.update, .delete, .create, .read])
     ]
     
     model.listPluralName = "Players"

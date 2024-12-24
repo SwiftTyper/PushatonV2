@@ -26,7 +26,7 @@ const schema = a.schema({
   ]),
 
   Player: a.model({
-    username: a.string().required(),
+    username: a.id().required(),
     currentGameId: a.string(),
     position: a.ref('Position'),
     highScore: a.integer().required().default(0),
@@ -38,7 +38,7 @@ const schema = a.schema({
   .authorization((allow) => [
     allow.guest().to(['read']),
     allow.authenticated().to(['create', 'read']),
-    allow.owner().to(['update', 'delete'])
+    allow.owner().to(['update', 'delete', 'create', 'read'])
   ]),
 
 })

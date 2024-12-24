@@ -14,6 +14,7 @@ import Combine
 @Observable
 class SessionViewModel {
     var state: LoginStatus = .notDetermined
+    var player: Player? = nil
     private var cancellables: Set<AnyCancellable> = []
     
     init() {
@@ -59,12 +60,15 @@ class SessionViewModel {
         }
     }
     
-    func createPlayerIfMissing() async throws {
+    private func createPlayerIfMissing() async throws {
         let attributes = try await Amplify.Auth.fetchUserAttributes()
         let username = attributes.first(where: { $0.key == AuthUserAttributeKey.preferredUsername })?.value
         guard let username = username else { return }
-        guard try await PlayerManager.doesPlayerExist(username: username) == false else { return }
-        await PlayerManager.createPlayer(username: username)
+        
+        if let player = try await PlayerManager.getPlayer(username: username) {
+            self.player = player
+        } else {
+            self.player = try await PlayerManager.createPlayer(username: username)
+        }
     }
 }
-

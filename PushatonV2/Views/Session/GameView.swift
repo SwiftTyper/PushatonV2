@@ -11,6 +11,7 @@ import Amplify
 
 struct GameView: View {
     @Environment(AuthenticationViewModel.self) var authenticationViewModel
+    @Environment(SessionViewModel.self) var sessionViewModel
     @State var gameMatchViewModel: GameMatchViewModel = .init()
     @State private var isGameShown = false
 
@@ -29,13 +30,36 @@ struct GameView: View {
                 }
                 
                 Button("Play") {
-                    Task { await gameMatchViewModel.startMatch(playerId: "") }
+                    Task { await gameMatchViewModel.startMatch(playerId: sessionViewModel.player?.username ?? "") }
                 }
                 
                 if let activeGame = gameMatchViewModel.game {
                     Text(activeGame.id)
                     Text(activeGame.player1Id)
-                    Text(activeGame.player2Id ?? "e")
+                    Text(activeGame.player2Id ?? "")
+                    Text(activeGame.status.rawValue)
+                }
+                
+                Button("List Games") {
+                    Task {
+                        gameMatchViewModel.games = try await gameMatchViewModel.listGames()
+                    }
+                }
+                
+                Button("Clear Games") {
+                    Task {
+                        await gameMatchViewModel.clearGames()
+                    }
+                }
+                
+                
+                List(gameMatchViewModel.games, id: \.id) { game in
+                    HStack {
+                        Text(game.id)
+                        Text(game.player1Id)
+                        Text(game.player2Id ?? "")
+                        Text(game.status.rawValue)
+                    }
                 }
             }
         }
