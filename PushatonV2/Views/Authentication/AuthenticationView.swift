@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct AuthenticationView: View {
-    @Environment(AuthenticationViewModel.self) var authenticationViewModel
+    @State private var authenticationViewModel: AuthenticationViewModel = .init()
     
     var body: some View {
         NavigationStack {

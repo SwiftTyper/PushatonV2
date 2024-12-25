@@ -2,7 +2,8 @@ import SwiftUI
 import SceneKit
 
 class GameController: NSObject {
-    @Binding var isGameShown: Bool
+    var gameMatchViewModel: GameMatchViewModel
+    var playerViewModel: PlayerViewModel
     var sceneView: SCNView
     var scene: SCNScene!
     var speed: Float = 0.15
@@ -14,9 +15,14 @@ class GameController: NSObject {
     var obstacle = Obstacle()
     var light = Light()
 
-    init(sceneView: SCNView, isGameShown: Binding<Bool>) {
+    init(
+        sceneView: SCNView,
+        gameMatchViewModel: GameMatchViewModel,
+        playerViewModel: PlayerViewModel
+    ) {
         self.sceneView = sceneView
-        self._isGameShown = isGameShown
+        self.gameMatchViewModel = gameMatchViewModel
+        self.playerViewModel = playerViewModel
         super.init()
         initGame()
     }
@@ -38,10 +44,12 @@ class GameController: NSObject {
         }
         sceneView.isPlaying = false
         
-        DispatchQueue.main.async {
-            let gameOverView = GameOverView(sceneView: self.sceneView)
-            self.sceneView.addSubview(gameOverView)
-        }
+        Task { await gameMatchViewModel.lost(playerId: playerViewModel.playerId) }
+        
+//        DispatchQueue.main.async {
+//            let gameOverView = GameOverView(sceneView: self.sceneView)
+//            self.sceneView.addSubview(gameOverView)
+//        }
     }
 }
 

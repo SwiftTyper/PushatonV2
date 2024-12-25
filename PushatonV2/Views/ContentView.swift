@@ -11,7 +11,6 @@ import Authenticator
 
 struct ContentView: View {
     @State private var sessionViewModel: SessionViewModel = .init()
-    @State private var authenticationViewModel: AuthenticationViewModel = .init()
     
     var body: some View {
         Group {
@@ -22,6 +21,5 @@ struct ContentView: View {
         }
         .modifier(ShowAuthenticationIfNeededModifier())
         .environment(sessionViewModel)
-        .environment(authenticationViewModel)
     }
 }

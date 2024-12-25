@@ -27,7 +27,6 @@ struct PushatonV2App: App {
         do {
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.add(plugin: AWSAPIPlugin(modelRegistration: AmplifyModels()))
-//            try Amplify.add(plugin: AWSDataStorePlugin(modelRegistration: AmplifyModels()))
             try Amplify.configure(with: .amplifyOutputs)
             print("Success")
         } catch {

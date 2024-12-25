@@ -35,7 +35,25 @@ class GameMatchViewModel {
         }
     }
     
-    private func cancelSubscription() {
+    func lost(playerId: String) async {
+        do {
+            guard var game = game else { return }
+            game.status = .finished
+            
+            let opponent = playerId == game.player1Id ? game.player2Id : game.player1Id
+            game.winner = opponent
+           
+            _ = try await Amplify.API.mutate(request: .update(game))
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func getGameResult(playerId: String) -> GameResult {
+        game?.winner == playerId ? .won : .lost
+    }
+    
+    func cancelSubscription() {
         subscription?.cancel()
     }
     
@@ -105,18 +123,20 @@ class GameMatchViewModel {
     
     func clearGames() async {
         do {
-            // First get all games
             let games = try await Amplify.API.query(request: .list(Game.self))
             let gameList = try games.get()
             
-            // Delete each game
             for game in gameList {
                 _ = try await Amplify.API.mutate(request: .delete(game))
                 print("Deleted game with ID: \(game.id)")
             }
-            
         } catch {
             print("Error clearing games: \(error)")
         }
     }
+}
+
+enum GameResult {
+    case won
+    case lost
 }

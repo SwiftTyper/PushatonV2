@@ -27,7 +27,7 @@ extension GameController {
         if sceneView.isPlaying {
             player.jump()
         } else {
-            isGameShown = false
+//            isGameShown = false
         }
     }
     

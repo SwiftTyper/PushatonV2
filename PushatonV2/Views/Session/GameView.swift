@@ -10,58 +10,39 @@ import SwiftUI
 import Amplify
 
 struct GameView: View {
-    @Environment(AuthenticationViewModel.self) var authenticationViewModel
     @Environment(SessionViewModel.self) var sessionViewModel
+    
     @State var gameMatchViewModel: GameMatchViewModel = .init()
-    @State private var isGameShown = false
-
+    @State var playerViewModel: PlayerViewModel = .init()
+    
     var body: some View {
-        if isGameShown {
-            GameSceneView(isGameShown: $isGameShown)
-                .ignoresSafeArea(.all)
-        } else {
-            VStack {
-                Button("Play Again") {
-                    self.isGameShown = true
-                }
-               
-                Button("Sign Out") {
-                    Task { await authenticationViewModel.signOut() }
-                }
-                
-                Button("Play") {
-                    Task { await gameMatchViewModel.startMatch(playerId: sessionViewModel.player?.username ?? "") }
-                }
-                
-                if let activeGame = gameMatchViewModel.game {
-                    Text(activeGame.id)
-                    Text(activeGame.player1Id)
-                    Text(activeGame.player2Id ?? "")
-                    Text(activeGame.status.rawValue)
-                }
-                
-                Button("List Games") {
-                    Task {
-                        gameMatchViewModel.games = try await gameMatchViewModel.listGames()
+        if let status = gameMatchViewModel.game?.status {
+            switch status {
+                case .waiting:
+                    ProgressView()
+                case .playing, .finished:
+                    GameSceneView(
+                        gameMatchViewModel: gameMatchViewModel,
+                        playerViewModel: playerViewModel
+                    )
+                    .ignoresSafeArea(.all)
+                    .overlay {
+                        if gameMatchViewModel.game?.status == .finished {
+                            VStack(spacing: 20) {
+                                Text(gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId) == .won ? "Winner" : "Game Over")
+                                
+                                Button("Go Back") {
+                                    gameMatchViewModel.game = nil
+                                    gameMatchViewModel.cancelSubscription()
+                                }
+                            }
+                        }
                     }
-                }
-                
-                Button("Clear Games") {
-                    Task {
-                        await gameMatchViewModel.clearGames()
-                    }
-                }
-                
-                
-                List(gameMatchViewModel.games, id: \.id) { game in
-                    HStack {
-                        Text(game.id)
-                        Text(game.player1Id)
-                        Text(game.player2Id ?? "")
-                        Text(game.status.rawValue)
-                    }
-                }
             }
+        } else {
+            MenuView()
+                .environment(gameMatchViewModel)
+                .environment(playerViewModel)
         }
     }
 }
