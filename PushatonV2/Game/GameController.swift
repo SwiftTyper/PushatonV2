@@ -14,6 +14,9 @@ class GameController: NSObject {
     var player = PlayerNode()
     var obstacle = Obstacle()
     var light = Light()
+    
+    var hearts: [SCNNode] = []
+    var isHit: Bool = false
 
     init(
         sceneView: SCNView,
@@ -30,12 +33,48 @@ class GameController: NSObject {
     func initGame() {
         setupScene()
         setupGestures()
+        setupHearts()
         camera.setup(self)
         ground.setup(self)
         lane.setup(self)
         player.setup(self)
         obstacle.setup(self)
         light.setup(self)
+    }
+    
+    func setupHearts() {
+        for i in 0..<3 {
+            let heartGeometry = SCNText(string: "❤️", extrusionDepth: 0)
+            let heartNode = SCNNode(geometry: heartGeometry)
+            
+            heartNode.scale = SCNVector3(1,1,1)
+            heartNode.position = SCNVector3(Float(-0.3 + Double(i) * 0.2), 3.5, -0.5)
+            
+            let billboardConstraint = SCNBillboardConstraint()
+            heartNode.constraints = [billboardConstraint]
+            
+            hearts.append(heartNode)
+            scene.rootNode.addChildNode(heartNode)
+        }
+    }
+     
+    func loseLife() {
+        if isHit == false {
+            self.isHit = true
+            
+            if hearts.count > 0 {
+                hearts.last!.removeFromParentNode()
+                hearts.removeLast()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.isHit = false
+                }
+            }
+            
+            if hearts.count == 0 {
+                gameOver()
+            }
+        }
     }
     
     func gameOver() {

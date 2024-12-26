@@ -31,9 +31,7 @@ struct MenuView: View {
         }
         
         Button("Clear Games") {
-            Task {
-                await gameMatchViewModel.clearGames()
-            }
+            Task { await gameMatchViewModel.clearGames() }
         }
         
         Text(playerViewModel.playerId)

@@ -22,13 +22,18 @@ class PlayerManager {
 //        return resultCount == 1
 //    }
     
-    static func doesPlayerExist(username: String) async throws -> Bool {
-        return try await getPlayer(username: username) != nil
+    static func doesPlayerExist(username: String) async -> Bool {
+        return await getPlayer(username: username) != nil
     }
     
-    static func getPlayer(username: String) async throws -> Player? {
-        let result = try await Amplify.API.query(request: .get(Player.self, byIdentifier: .identifier(username: username)))
-        return try result.get()
+    static func getPlayer(username: String) async -> Player? {
+        do {
+            let result = try await Amplify.API.query(request: .get(Player.self, byIdentifier: .identifier(username: username)))
+            return try result.get()
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
     
     static func createPlayer(username: String) async throws -> Player {

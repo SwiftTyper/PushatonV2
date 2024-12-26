@@ -41,7 +41,7 @@ class AuthenticationViewModel {
             } else {
                 state = .verifyCode
             }
-        } catch let error as AuthError{
+        } catch let error as AuthError {
             AlertManager.presentAlert(message: error.errorDescription)
             state = .login
         } catch {

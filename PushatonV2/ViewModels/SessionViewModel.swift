@@ -24,6 +24,12 @@ class SessionViewModel {
     private func setupListener() {
         Amplify.Hub.publisher(for: .auth).sink { [weak self] payload in
              switch payload.eventName {
+                 case HubPayload.EventName.Auth.fetchUserAttributesAPI:
+                     print("fetched")
+                 case HubPayload.EventName.Auth.updateUserAttributeAPI:
+                     print("update")
+                 case HubPayload.EventName.Auth.updateUserAttributesAPI:
+                     print("update 2")
                  case HubPayload.EventName.Auth.signedIn:
                      self?.state = .loggedIn
                  case HubPayload.EventName.Auth.signedOut:

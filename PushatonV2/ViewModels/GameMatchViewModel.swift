@@ -17,9 +17,7 @@ class GameMatchViewModel {
     var subscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
     
     deinit {
-        Task {
-            await self.cancelSubscription()
-        }
+        Task { await self.cancelSubscription() }
     }
     
     func startMatch(playerId: String) async {
@@ -134,9 +132,4 @@ class GameMatchViewModel {
             print("Error clearing games: \(error)")
         }
     }
-}
-
-enum GameResult {
-    case won
-    case lost
 }
