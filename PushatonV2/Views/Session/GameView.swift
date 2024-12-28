@@ -17,10 +17,9 @@ struct GameView: View {
     var body: some View {
         if let status = gameMatchViewModel.game?.status {
             switch status {
-//                case .waiting:
-//                    ProgressView("Looking for players")
-//                case .playing, .finished:
-                default:
+                case .waiting:
+                    ProgressView("Looking for players")
+                case .playing, .finished:
                     GameSceneView(
                         gameMatchViewModel: gameMatchViewModel,
                         playerViewModel: playerViewModel

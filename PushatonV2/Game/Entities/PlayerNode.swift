@@ -10,6 +10,7 @@ import SceneKit
 
 class PlayerNode: SCNNode {
     private var isManeuvering: Bool = false
+    private var isHit: Bool = false
     
     init(size: CGFloat = 1.0) {
         super.init()
@@ -41,8 +42,18 @@ class PlayerNode: SCNNode {
         }
     }
     
-    func die() {
-        isManeuvering = false
+    func die(removeHeart: @escaping () -> Bool, onFinalDeath: @escaping () -> Void) {
+        guard !isHit else { return }
+        isHit = true
+        
+        if removeHeart() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.isHit = false
+            }
+        } else {
+            onFinalDeath()
+            isManeuvering = false
+        }
     }
     
     func dash() {

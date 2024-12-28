@@ -258,68 +258,6 @@
             endingLineNumber = "34"
             landmarkName = "getPlayer(username:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "637E8637-5396-49A0-B63B-57612A20BF3D - 4995e0bc7c9118a6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for static PushatonV2.PlayerManager.getPlayer(username: Swift.String) async -&gt; Swift.Optional&lt;PushatonV2.Player&gt;"
-                  moduleName = "PushatonV2.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/Managers/PlayerManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
-               </Location>
-               <Location
-                  uuid = "637E8637-5396-49A0-B63B-57612A20BF3D - 7756b1f4f27db6a7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for static PushatonV2.PlayerManager.getPlayer(username: Swift.String) async -&gt; Swift.Optional&lt;PushatonV2.Player&gt;"
-                  moduleName = "PushatonV2.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/Managers/PlayerManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D007909C-8ECA-4231-B9EF-8174FC7B619E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PushatonV2/Game/GameController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "loseLife()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5DF7C988-BAD6-4A8F-B078-729104090CA5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PushatonV2/Game/GameController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "loseLife()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

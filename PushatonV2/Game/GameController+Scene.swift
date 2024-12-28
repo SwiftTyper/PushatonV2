@@ -10,14 +10,23 @@ import SceneKit
 
 extension GameController {
     func setupScene() {
-        scene = .init()
         sceneView.delegate = self
-        sceneView.scene = scene
+        
+        scene = .init()
+        scene.physicsWorld.contactDelegate = self
+       
         sceneView.backgroundColor = .skyBlue
         sceneView.allowsCameraControl = false
         sceneView.showsStatistics = true
         sceneView.debugOptions = [.showPhysicsShapes]
         sceneView.isPlaying = true
-        scene.physicsWorld.contactDelegate = self
+       
+        sceneView.present(scene, with: .fade(withDuration: 0.5), incomingPointOfView: nil, completionHandler: nil)
+        
+        DispatchQueue.main.async {
+            self.hud = .init(with: self.sceneView.bounds.size)
+            self.sceneView.overlaySKScene = self.hud
+            self.sceneView.overlaySKScene?.isUserInteractionEnabled = false
+        }
     }
 }

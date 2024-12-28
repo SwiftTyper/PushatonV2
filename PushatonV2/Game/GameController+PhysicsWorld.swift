@@ -18,7 +18,7 @@ extension GameController: SCNPhysicsContactDelegate {
         
         if (isPlayerA && nodeB.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) ||
             (isPlayerB && nodeA.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) {
-            self.loseLife()
+            self.player.die(removeHeart: hud.removeHeart, onFinalDeath: gameOver)
         }
     }
 }
