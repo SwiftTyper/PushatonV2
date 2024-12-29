@@ -28,7 +28,7 @@ class PlayerViewModel {
             let username = attributes.first(where: { $0.key == AuthUserAttributeKey.preferredUsername })?.value
             guard let username = username else { return }
             
-            if let player = try await PlayerManager.getPlayer(username: username) {
+            if let player = try await PlayerManager.getPlayer(username: username, signedIn: true) {
                 self.player = player
             } else {
                 self.player = try await PlayerManager.createPlayer(username: username)

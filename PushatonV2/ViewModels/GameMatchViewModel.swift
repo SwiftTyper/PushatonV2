@@ -17,7 +17,9 @@ class GameMatchViewModel {
     var subscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
     
     deinit {
-        Task { await self.cancelSubscription() }
+        Task { @MainActor [weak self] in
+            self?.cancelSubscription()
+        }
     }
     
     func startMatch(playerId: String) async {
