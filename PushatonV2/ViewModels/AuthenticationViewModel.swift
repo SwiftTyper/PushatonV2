@@ -23,7 +23,7 @@ class AuthenticationViewModel {
         state = .loading
         do {
             guard try await PlayerManager.doesPlayerExist(username: username) == false else {
-                return
+                throw PlayerError.playerAlreadyExists
             }
             let userAttributes = [AuthUserAttribute(.preferredUsername, value: username)]
             let options = AuthSignUpRequest.Options(userAttributes: userAttributes)
@@ -41,6 +41,9 @@ class AuthenticationViewModel {
             } else {
                 state = .verifyCode
             }
+        } catch let error as PlayerError {
+            AlertManager.presentAlert(message: error.errorDescription)
+            state = .login
         } catch let error as AuthError {
             AlertManager.presentAlert(message: error.errorDescription)
             state = .login

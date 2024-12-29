@@ -14,13 +14,8 @@ class PlayerManager {
     }
     
     static func getPlayer(username: String, signedIn: Bool = false) async throws -> Player? {
-        do {
-            let result = try await Amplify.API.query(request: .get(Player.self, byIdentifier: .identifier(username: username), authMode: signedIn ? .amazonCognitoUserPools : .awsIAM))
-            return try result.get()
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
+        let result = try await Amplify.API.query(request: .get(Player.self, byIdentifier: .identifier(username: username), authMode: signedIn ? .amazonCognitoUserPools : .awsIAM))
+        return try result.get()
     }
     
     static func createPlayer(username: String) async throws -> Player {

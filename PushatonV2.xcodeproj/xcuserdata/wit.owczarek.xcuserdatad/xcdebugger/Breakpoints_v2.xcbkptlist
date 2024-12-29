@@ -148,51 +148,5 @@
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0146BA4D-B21A-43E4-9099-651E00EADD1B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PushatonV2/ViewModels/Managers/PlayerManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "getPlayer(username:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0146BA4D-B21A-43E4-9099-651E00EADD1B - 3cecead66baec7a0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for static PushatonV2.PlayerManager.getPlayer(username: Swift.String, signedIn: Swift.Bool) async throws -&gt; Swift.Optional&lt;PushatonV2.Player&gt;"
-                  moduleName = "PushatonV2.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/Managers/PlayerManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21">
-               </Location>
-               <Location
-                  uuid = "0146BA4D-B21A-43E4-9099-651E00EADD1B - cb4c119c29b61a7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for static PushatonV2.PlayerManager.getPlayer(username: Swift.String, signedIn: Swift.Bool) async throws -&gt; Swift.Optional&lt;PushatonV2.Player&gt;"
-                  moduleName = "PushatonV2.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/wit.owczarek/Dev/Swift/Projects/PushatonV2/PushatonV2/ViewModels/Managers/PlayerManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
