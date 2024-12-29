@@ -9,31 +9,13 @@ import Foundation
 import Amplify
 
 class PlayerManager {
-//    static func doesPlayerExist(username: String) async throws -> Bool {
-//        let result = try await Amplify.API.query(request:
-//                .list(
-//                    Player.self,
-//                    where: QueryPredicateOperation(field: "username", operator: .equals(username)),
-//                    limit: 1,
-//                    authMode: .amazonCognitoUserPools
-//                )
-//            )
-//        let resultCount = try result.get().count
-//        return resultCount == 1
-//    }
-    
-    static func doesPlayerExist(username: String) async -> Bool {
-        return await getPlayer(username: username) != nil
+    static func doesPlayerExist(username: String) async throws -> Bool {
+        return try await getPlayer(username: username) != nil
     }
     
-    static func getPlayer(username: String) async -> Player? {
-        do {
-            let result = try await Amplify.API.query(request: .get(Player.self, byIdentifier: .identifier(username: username)))
-            return try result.get()
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
+    static func getPlayer(username: String) async throws -> Player? {
+        let result = try await Amplify.API.query(request: .get(Player.self, byIdentifier: .identifier(username: username), authMode: .awsIAM))
+        return try result.get()
     }
     
     static func createPlayer(username: String) async throws -> Player {

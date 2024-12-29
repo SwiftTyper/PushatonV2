@@ -11,17 +11,13 @@ import SwiftUI
 struct ResetPasswordView: View {
     @Environment(ForgotPasswordViewModel.self) var viewModel
     
-    init() {
-    }
-    
     @State private var animate: Bool = false
     @State private var focused: Bool = false
     @State private var passwordFocused: Bool = false
     @State private var isPasswordHidden: Bool = true
    
     var body: some View {
-        form
-            .safeAreaInset(edge: .bottom) { bottomToolbar }
+        form.safeAreaInset(edge: .bottom) { bottomToolbar }
     }
 }
 

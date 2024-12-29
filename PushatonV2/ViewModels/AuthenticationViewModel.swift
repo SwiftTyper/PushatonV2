@@ -22,7 +22,7 @@ class AuthenticationViewModel {
     func signUp() async {
         state = .loading
         do {
-            guard try await !PlayerManager.doesPlayerExist(username: username) else {
+            guard try await PlayerManager.doesPlayerExist(username: username) == false else {
                 return
             }
             let userAttributes = [AuthUserAttribute(.preferredUsername, value: username)]
@@ -59,14 +59,14 @@ class AuthenticationViewModel {
             )
             
             if confirmSignUpResult.isSignUpComplete {
-                reset()
+                await signIn()
             }
         } catch let error as AuthError{
             AlertManager.presentAlert(message: error.errorDescription)
         } catch {
             AlertManager.presentAlert()
         }
-        state = .verifyCode
+        state = .login
     }
     
     func resendSignUpCode() async {
@@ -114,27 +114,4 @@ class AuthenticationViewModel {
     func signOut() async {
        _ = await Amplify.Auth.signOut()
     }
-    
-//    func checkIfUserVerifiedAccount() async {
-//        do {
-//            _ = try await Amplify.Auth.getCurrentUser()
-//        } catch let error as AuthError {
-//            if error == AuthError.configuration("", "", nil) {
-//                state = .verifyCode
-//            }
-//        } catch {
-//            print(error)
-//        }
-//    }
-    
-//    func getLoggedInUserId() async throws -> String {
-//        do {
-//            let currentUser = try await Amplify.Auth.getCurrentUser()
-//            print(currentUser.username)
-//            return currentUser.userId
-//        } catch {
-//            print(error.localizedDescription)
-//            return ""
-//        }
-//    }
 }

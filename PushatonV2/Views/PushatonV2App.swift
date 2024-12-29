@@ -8,7 +8,6 @@
 import SwiftUI
 import Amplify
 import AWSCognitoAuthPlugin
-//import AWSDataStorePlugin
 import AWSAPIPlugin
 
 @main
