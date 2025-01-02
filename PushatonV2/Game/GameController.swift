@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 import SceneKit
 
 class GameController: NSObject {
@@ -29,6 +30,7 @@ class GameController: NSObject {
     }
     
     func initGame() {
+        setupListener()
         setupScene()
         setupGestures()
         camera.setup(self)
@@ -39,14 +41,29 @@ class GameController: NSObject {
         light.setup(self)
     }
     
-    func gameOver() {
-        scene.rootNode.childNodes.forEach { node in
-            node.removeAllActions()
+    
+    func setupListener() {
+        Task { @MainActor in
+            for await game in gameMatchViewModel.gameStream {
+                if game?.status == .finished && self.sceneView.isPlaying == true {
+                    self.scene.rootNode.childNodes.forEach { node in
+                        node.removeAllActions()
+                    }
+                    self.sceneView.isPlaying = false
+                }
+            }
         }
-        sceneView.isPlaying = false
-        
-        Task { await gameMatchViewModel.lost(playerId: playerViewModel.playerId) }
-        
+    }
+    
+    func gameOver() {
+        if gameMatchViewModel.game?.status == .playing {
+            scene.rootNode.childNodes.forEach { node in
+                node.removeAllActions()
+            }
+            sceneView.isPlaying = false
+            
+            Task { await gameMatchViewModel.lost(playerId: playerViewModel.playerId) }
+        }
 //        DispatchQueue.main.async {
 //            let gameOverView = GameOverView(sceneView: self.sceneView)
 //            self.sceneView.addSubview(gameOverView)

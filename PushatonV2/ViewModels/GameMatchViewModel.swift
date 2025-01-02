@@ -9,19 +9,28 @@ import Foundation
 import Observation
 import Amplify
 
-@MainActor
 @Observable
 class GameMatchViewModel {
-    var game: Game? = nil
+    var game: Game? = nil {
+        willSet {
+            continuation.yield(newValue)
+        }
+    }
+    
     var games: [Game] = []
     var subscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
     
+    let (gameStream, continuation) = AsyncStream.makeStream(of: Game?.self)
+    
     deinit {
+        continuation.finish()
+        
         Task { @MainActor [weak self] in
             self?.cancelSubscription()
         }
     }
     
+    @MainActor
     func startMatch(playerId: String) async {
         do {
             if let existingGame = try await getQueuedGame() {
