@@ -12,7 +12,7 @@ class Camera: SCNNode {
     override init() {
         super.init()
         camera = SCNCamera()
-        position = SCNVector3(0, 6, 12)
+        position = SCNVector3(0, 4, 8)
         eulerAngles = SCNVector3(x: Calculator.toRadians(angle: -15), y: 0, z: 0)
     }
     

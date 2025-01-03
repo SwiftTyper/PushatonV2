@@ -20,5 +20,11 @@ extension GameController: SCNPhysicsContactDelegate {
             (isPlayerB && nodeA.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) {
             self.player.die(removeHeart: hud.removeHeart, onFinalDeath: gameOver)
         }
+        
+        if (isPlayerA && nodeB.physicsBody?.categoryBitMask == CollisionCategory.coin.rawValue) {
+            Coin.collect(node: nodeB)
+        } else if (isPlayerB && nodeA.physicsBody?.categoryBitMask == CollisionCategory.coin.rawValue) {
+            Coin.collect(node: nodeA)
+        }
     }
 }

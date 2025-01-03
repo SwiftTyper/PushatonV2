@@ -11,10 +11,11 @@ import SceneKit
 class PlayerNode: SCNNode {
     private var isManeuvering: Bool = false
     private var isHit: Bool = false
+    static let size: CGFloat = 1
     
-    init(size: CGFloat = 1.0) {
+    override init() {
         super.init()
-        let playerGeometry = SCNBox(width: size, height: size, length: size, chamferRadius: 0)
+        let playerGeometry = SCNBox(width: PlayerNode.size, height: PlayerNode.size, length: PlayerNode.size, chamferRadius: 0)
         playerGeometry.firstMaterial?.diffuse.contents = UIColor.blue
         geometry = playerGeometry
         
@@ -31,8 +32,8 @@ class PlayerNode: SCNNode {
     func jump() {
         guard !isManeuvering else { return  }
         isManeuvering = true
-        let moveUpAction = SCNAction.moveBy(x: 0, y: 1.5, z: 0, duration: 0.4)
-        let moveDownAction = SCNAction.moveBy(x: 0, y: -1.5, z: 0, duration: 0.3)
+        let moveUpAction = SCNAction.moveBy(x: 0, y: 2, z: 0, duration: 0.4)
+        let moveDownAction = SCNAction.moveBy(x: 0, y: -2, z: 0, duration: 0.3)
         moveUpAction.timingMode = .easeOut
         moveDownAction.timingMode = .easeIn
         let jumpAction = SCNAction.sequence([moveUpAction,moveDownAction])
@@ -67,7 +68,7 @@ class PlayerNode: SCNNode {
     
     func setup(_ gameController: GameController) {
         let size: Float = self.boundingBox.max.y - self.boundingBox.min.y
-        position = .init(x: 0, y: gameController.lane.segmentHeight + size/2, z: 0)
+        position = .init(x: 0, y: Lane.segmentHeight + size/2, z: 0)
         gameController.scene.rootNode.addChildNode(self)
     }
     

@@ -32,7 +32,7 @@ class Obstacle {
         node.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
         
         let spacing: Float = spacing(gameController)
-        node.position.y += gameController.lane.segmentHeight
+        node.position.y += Lane.segmentHeight
         
         if !obstacles.isEmpty, let startPosition = obstacles.last?.position.z, startPosition < (spacing * 2 + length/2) {
             node.position.z = startPosition - (spacing + length)
@@ -46,6 +46,7 @@ class Obstacle {
         index+=1
         obstacles.append(node)
         gameController.scene.rootNode.addChildNode(node)
+        Coin.spawnCoins(scene: gameController.scene, obstacle: node, data: data)
     }
     
     func update(_ gameController: GameController) {
@@ -69,7 +70,7 @@ class Obstacle {
     
     //MARK: To Do calculate spacing based on speed ensuring jump is always possible
     func spacing(_ gameController: GameController) -> Float {
-        return 30
+        return 40
     }
     
     func setup(_ gameController: GameController) {

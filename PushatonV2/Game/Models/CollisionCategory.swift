@@ -11,4 +11,5 @@ enum CollisionCategory: Int {
     case player = 1
     case obstacle = 2
     case ground = 3
+    case coin = 4
 }

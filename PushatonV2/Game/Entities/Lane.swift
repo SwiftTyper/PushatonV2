@@ -4,7 +4,7 @@ import SceneKit
 class Lane {
     private var segments: [SCNNode] = []
     private let segmentLength: Float = 10.0
-    let segmentHeight: Float = 0.4
+    static let segmentHeight: Float = 0.4
     
     init() { }
     
@@ -28,7 +28,7 @@ class Lane {
     
     private func createSegment(_ gameController: GameController) {
         let width = CGFloat(0.4 * gameController.camera.visibleWidth)
-        let laneGeometry = SCNBox(width: width, height: CGFloat(segmentHeight), length: CGFloat(segmentLength), chamferRadius: 0)
+        let laneGeometry = SCNBox(width: width, height: CGFloat(Lane.segmentHeight), length: CGFloat(segmentLength), chamferRadius: 0)
         let material = SCNMaterial()
         
         if let texturePath = Bundle.main.path(forResource: "lightgrass", ofType: "png"),
@@ -42,7 +42,7 @@ class Lane {
         let segmentNode = SCNNode(geometry: laneGeometry)
         laneGeometry.materials = [material]
         
-        segmentNode.position.y = segmentHeight/2
+        segmentNode.position.y = Lane.segmentHeight/2
         segmentNode.position.z = (segments.last?.position.z ?? gameController.camera.position.z) - segmentLength
         
         let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
