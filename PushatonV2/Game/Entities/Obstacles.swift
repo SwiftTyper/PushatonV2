@@ -33,13 +33,12 @@ class Obstacle {
         
         let spacing: Float = spacing(gameController)
         node.position.y += gameController.lane.segmentHeight
-        node.position.z = Float(data.z)
         
-//        if !obstacles.isEmpty, let startPosition = obstacles.last?.position.z, startPosition < (spacing * 2 + length/2) {
-//            node.position.z = startPosition - (spacing + length)
-//        } else {
-//            node.position.z = -(spacing * 2 + length/2)
-//        }
+        if !obstacles.isEmpty, let startPosition = obstacles.last?.position.z, startPosition < (spacing * 2 + length/2) {
+            node.position.z = startPosition - (spacing + length)
+        } else {
+            node.position.z = -(spacing * 2 + length/2)
+        }
         
         let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
         node.runAction(SCNAction.repeatForever(moveAction))
@@ -58,10 +57,12 @@ class Obstacle {
             }
         }
         
-        if (obstacles.last?.position.z ?? .zero) - spacing(gameController) > -gameController.camera.lastVisibleZPosition {
-            guard let obstacle = gameController.gameMatchViewModel.game?.obstacles[index] else {
-                fatalError("index out of range")
+        if (obstacles.last?.position.z ?? .zero) > -gameController.camera.lastVisibleZPosition {
+            guard let obstacles = gameController.gameMatchViewModel.game?.obstacles else {
+                return
             }
+            let safeIndex = index % obstacles.count
+            let obstacle = obstacles[safeIndex]
             createObstacle(with: obstacle, gameController)
         }
     }

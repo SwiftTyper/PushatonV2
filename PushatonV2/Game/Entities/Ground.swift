@@ -13,7 +13,7 @@ class Ground: SCNNode {
         super.init()
         let floor = SCNFloor()
         floor.firstMaterial?.diffuse.contents = UIColor.green
-        floor.reflectivity = 0.0
+        floor.reflectivity = 0.1
         
         geometry = floor
         

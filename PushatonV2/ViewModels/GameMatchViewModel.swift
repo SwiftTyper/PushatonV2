@@ -107,14 +107,13 @@ class GameMatchViewModel {
     
     @MainActor
     private func createGame(playerId: String) async throws -> Game {
-        let numberOfObstacles = 50
+        let numberOfObstacles = 80
         var obstacles: [ObstacleData] = []
       
         for i in 0..<numberOfObstacles {
             let isLowObstacle = Bool.random()
             let obstacle = ObstacleData(
-                isLow: isLowObstacle,
-                z: Double(-(i + 1)) * 30.0
+                isLow: isLowObstacle
             )
             obstacles.append(obstacle)
         }

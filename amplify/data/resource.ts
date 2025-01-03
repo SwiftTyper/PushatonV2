@@ -13,8 +13,7 @@ const schema = a.schema({
   ]),
 
   ObstacleData: a.customType({
-    isLow: a.boolean().required(),
-    z: a.float().required(),
+    isLow: a.boolean().required()
   }),
 
   Game: a.model({

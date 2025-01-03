@@ -4,5 +4,4 @@ import Foundation
 
 public struct ObstacleData: Embeddable {
   var isLow: Bool
-  var z: Double
 }
