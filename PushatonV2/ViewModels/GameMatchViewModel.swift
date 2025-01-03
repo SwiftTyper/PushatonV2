@@ -44,6 +44,7 @@ class GameMatchViewModel {
         }
     }
     
+    @MainActor
     func lost(playerId: String) async {
         do {
             guard var game = game else { return }
@@ -66,6 +67,7 @@ class GameMatchViewModel {
         subscription?.cancel()
     }
     
+    @MainActor
     private func createSubscription() {
         subscription = Amplify.API.subscribe(request: .subscription(of: Game.self, type: .onUpdate))
         guard let subscription = subscription else { return }
@@ -93,6 +95,7 @@ class GameMatchViewModel {
         }
     }
     
+    @MainActor
     private func joinGame(_ game: Game, playerId: String) async throws -> Game {
         var game = game
         game.player2Id = playerId
@@ -102,16 +105,32 @@ class GameMatchViewModel {
         return try result.get()
     }
     
+    @MainActor
     private func createGame(playerId: String) async throws -> Game {
+        let numberOfObstacles = 50
+        var obstacles: [ObstacleData] = []
+      
+        for i in 0..<numberOfObstacles {
+            let isLowObstacle = Bool.random()
+            let obstacle = ObstacleData(
+                isLow: isLowObstacle,
+                z: Double(-(i + 1)) * 30.0
+            )
+            obstacles.append(obstacle)
+        }
+        
         let game = Game(
             id: UUID().uuidString,
             player1Id: playerId,
-            status: .waiting
+            status: .waiting,
+            obstacles: obstacles
         )
+        
         let result = try await Amplify.API.mutate(request: .create(game))
         return try result.get()
     }
     
+    @MainActor
     private func getQueuedGame() async throws -> Game? {
         let predicate = QueryPredicateOperation(field: "status", operator: .equals(GameStatus.waiting.rawValue))
         let request = GraphQLRequest<Game>.list(
@@ -127,11 +146,19 @@ class GameMatchViewModel {
         
     }
     
-    func listGames() async throws -> [Game] {
-        let result = try await Amplify.API.query(request: .list(Game.self))
-        return try result.get().elements
+    @MainActor
+    func listGames() async {
+        do {
+            let result = try await Amplify.API.query(request: .list(Game.self))
+            games = try result.get().elements
+        } catch let error as GraphQLResponseError<List<PushatonV2.Game>>{
+            print(error.debugDescription)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
+    @MainActor
     func clearGames() async {
         do {
             let games = try await Amplify.API.query(request: .list(Game.self))

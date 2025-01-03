@@ -8,6 +8,7 @@ public struct Game: Model {
   public var player2Id: String?
   public var status: GameStatus
   public var winner: String?
+  public var obstacles: [ObstacleData]
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
@@ -16,12 +17,14 @@ public struct Game: Model {
       player2Id: String? = nil,
       status: GameStatus,
       winner: String? = nil,
+      obstacles: [ObstacleData] = [],
       createdAt: Temporal.DateTime? = nil) {
     self.init(id: id,
       player1Id: player1Id,
       player2Id: player2Id,
       status: status,
       winner: winner,
+      obstacles: obstacles,
       createdAt: createdAt,
       updatedAt: nil)
   }
@@ -30,6 +33,7 @@ public struct Game: Model {
       player2Id: String? = nil,
       status: GameStatus,
       winner: String? = nil,
+      obstacles: [ObstacleData] = [],
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
@@ -37,6 +41,7 @@ public struct Game: Model {
       self.player2Id = player2Id
       self.status = status
       self.winner = winner
+      self.obstacles = obstacles
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }

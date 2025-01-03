@@ -12,12 +12,18 @@ const schema = a.schema({
     'FINISHED'
   ]),
 
+  ObstacleData: a.customType({
+    isLow: a.boolean().required(),
+    z: a.float().required(),
+  }),
+
   Game: a.model({
     id: a.id().required(),
     player1Id: a.string().required(),
     player2Id: a.string(),
     status: a.ref('GameStatus').required(),
     winner: a.string(),
+    obstacles: a.ref('ObstacleData').required().array().required(),
     createdAt: a.datetime(), 
   })
   .identifier(['id'])

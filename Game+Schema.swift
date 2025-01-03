@@ -10,6 +10,7 @@ extension Game {
     case player2Id
     case status
     case winner
+    case obstacles
     case createdAt
     case updatedAt
   }
@@ -38,6 +39,7 @@ extension Game {
       .field(game.player2Id, is: .optional, ofType: .string),
       .field(game.status, is: .required, ofType: .enum(type: GameStatus.self)),
       .field(game.winner, is: .optional, ofType: .string),
+      .field(game.obstacles, is: .required, ofType: .embeddedCollection(of: ObstacleData.self)),
       .field(game.createdAt, is: .optional, ofType: .dateTime),
       .field(game.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
