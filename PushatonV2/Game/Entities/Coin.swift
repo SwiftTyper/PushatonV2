@@ -14,8 +14,6 @@ class Coin: SCNNode {
     override init() {
         super.init()
         setupCoin(radius: Coin.radius)
-        setupPhysics(radius: Coin.radius)
-        startSpinAnimation()
     }
     
     required init?(coder: NSCoder) {
@@ -42,9 +40,7 @@ class Coin: SCNNode {
         self.name = "coin"
         
         self.eulerAngles.x = Float.pi / 2
-    }
-    
-    private func setupPhysics(radius: CGFloat) {
+        
         let shape = SCNPhysicsShape(geometry: self.geometry!, options: [
             SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.boundingBox
         ])
@@ -54,9 +50,7 @@ class Coin: SCNNode {
         self.physicsBody?.contactTestBitMask = CollisionCategory.player.rawValue
         self.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
         self.physicsBody?.isAffectedByGravity = false
-    }
-    
-    private func startSpinAnimation() {
+        
         let rotationAnimation = SCNAction.repeatForever(
             SCNAction.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 3)
         )
@@ -67,16 +61,14 @@ class Coin: SCNNode {
 // MARK: - Coin Spawning and Movement
 extension Coin {
     static func spawnCoins(scene: SCNScene, obstacle: SCNNode, data: ObstacleData) {
-        guard Int.random(in: 0..<3) == 0 else { return }
-        
-        let type = Arrangement.getRandom(isLow: data.isLow)
+        guard let type = data.coinArrangement else { return }
         let baseY: Float = Lane.segmentHeight + Float(PlayerNode.size/2)
         let spacing: Float = 3.0
         
         switch type {
             case .straight:
-                let length = Bool.random() ? 6 : 4
-                for i in 1...length {
+                guard let lenght = data.coinValue else { return }
+                for i in 1...lenght {
                     let coin = Coin()
                     let z = obstacle.position.z + Float(i) * spacing + spacing
                     coin.position = SCNVector3(obstacle.position.x, baseY, z)
@@ -106,7 +98,7 @@ extension Coin {
                 for i in 0..<numberOfCoins {
                     let progress = Float(i) / Float(numberOfCoins - 1)
                     let angle = .pi * progress
-                    let z = obstacle.position.z + radius * cos(angle)
+                    let z = obstacle.position.z + radius * cos(angle) * 2
                     let y = baseY + radius * sin(angle)
                     let coin = Coin()
                     coin.position = SCNVector3(obstacle.position.x, y, z)
@@ -115,7 +107,7 @@ extension Coin {
                     coin.runAction(SCNAction.repeatForever(moveAction))
                     
                     scene.rootNode.addChildNode(coin)
-                }
+            }
         }
     }
     
@@ -132,25 +124,28 @@ extension Coin {
     static func collect(node: SCNNode) {
         node.removeFromParentNode()
     }
-}
-
-// MARK: - Arrangement Types
-extension Coin {
-    enum Arrangement {
-        case straight
-        case doubleStraight
-        case arc
+    
+    static func getRandomArrangement(isLow: Bool) -> (CoinArrangement?, Int?) {
+        guard Bool.random(odds: 3) else { return (nil,nil) }
+        let randomNumber = Int.random(in: 1...7)
         
-        static func getRandom(isLow: Bool) -> Arrangement {
-            let randomNumber = Int.random(in: 1...7)
-            
+        if isLow {
             switch randomNumber {
                 case 1...4:
-                    return .straight
+                    let length = Int.random(in: 4...6)
+                    return (.straight, length)
                 case 5, 6:
-                    return isLow ? .arc : .straight
+                    return (.arc, nil)
                 default:
-                    return .doubleStraight
+                    return (.doubleStraight, nil)
+            }
+        } else {
+            switch randomNumber {
+                case 1...6:
+                    let length = Int.random(in: 4...6)
+                    return (.straight, length)
+                default:
+                    return (.doubleStraight, nil)
             }
         }
     }

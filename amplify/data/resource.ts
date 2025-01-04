@@ -12,8 +12,16 @@ const schema = a.schema({
     'FINISHED'
   ]),
 
+  CoinArrangement: a.enum([
+    'STRAIGHT',
+    'DOUBLE_STRAIGHT',
+    'ARC'
+  ]),
+
   ObstacleData: a.customType({
-    isLow: a.boolean().required()
+    isLow: a.boolean().required(),
+    coinArrangement: a.ref('CoinArrangement'),
+    coinValue: a.integer()
   }),
 
   Game: a.model({

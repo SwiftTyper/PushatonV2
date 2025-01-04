@@ -6,6 +6,8 @@ extension ObstacleData {
   // MARK: - CodingKeys 
    public enum CodingKeys: String, ModelKey {
     case isLow
+    case coinArrangement
+    case coinValue
   }
   
   public static let keys = CodingKeys.self
@@ -18,7 +20,9 @@ extension ObstacleData {
     model.syncPluralName = "ObstacleData"
     
     model.fields(
-      .field(obstacleData.isLow, is: .required, ofType: .bool)
+      .field(obstacleData.isLow, is: .required, ofType: .bool),
+      .field(obstacleData.coinArrangement, is: .optional, ofType: .enum(type: CoinArrangement.self)),
+      .field(obstacleData.coinValue, is: .optional, ofType: .int)
     )
     }
 }

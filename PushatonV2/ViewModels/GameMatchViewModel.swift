@@ -110,10 +110,13 @@ class GameMatchViewModel {
         let numberOfObstacles = 80
         var obstacles: [ObstacleData] = []
       
-        for i in 0..<numberOfObstacles {
+        for _ in 0..<numberOfObstacles {
             let isLowObstacle = Bool.random()
+            let coin = Coin.getRandomArrangement(isLow: isLowObstacle)
             let obstacle = ObstacleData(
-                isLow: isLowObstacle
+                isLow: isLowObstacle,
+                coinArrangement: coin.0,
+                coinValue: coin.1
             )
             obstacles.append(obstacle)
         }
