@@ -15,15 +15,19 @@ class Heart: SKSpriteNode {
     }
     
     init(_ state: State) {
-        let texture: SKTexture
+        let texture: SKTexture = .init(imageNamed: "heart")
         if state == .empty {
-            texture = .init(imageNamed: "dark heart")
+            super.init(texture: texture, color: .black, size: texture.size())
+            colorBlendFactor = 1
         } else {
-            texture = .init(imageNamed: "heart")
+            super.init(texture: texture, color: .clear, size: texture.size())
         }
-        
-        super.init(texture: texture, color: .clear, size: texture.size())
-        size = CGSize(width: 40, height: 40)
+      
+        let desiredWidth: CGFloat = 40
+        let aspectRatio = texture.size().height / texture.size().width
+        let calculatedHeight = desiredWidth * aspectRatio
+                
+        size = CGSize(width: desiredWidth, height: calculatedHeight)
         name = "heart"
         zPosition = state == .empty ? 2 : 3
         anchorPoint = CGPoint(x: 0.5, y: 1)
