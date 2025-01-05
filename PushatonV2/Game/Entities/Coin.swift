@@ -121,8 +121,22 @@ extension Coin {
         }
     }
     
-    static func collect(node: SCNNode) {
-        node.removeFromParentNode()
+    static func collect(contact: SCNPhysicsContact, _ gameController: GameController) {
+        var coinNode: SCNNode?
+        if contact.nodeA.name == "coin" {
+            coinNode = contact.nodeA
+        } else if contact.nodeB.name == "coin" {
+            coinNode = contact.nodeB
+        }
+        
+        if let coin = coinNode {
+            if coin.value(forKey: "collected") as? Bool != true {
+                coin.removeFromParentNode()
+                coin.setValue(true, forKey: "collected")
+                let score = gameController.gameMatchViewModel.updateScore(playerId: gameController.playerViewModel.playerId)
+                gameController.hud.updatePoints(with: score)
+            }
+        }
     }
     
     static func getRandomArrangement(isLow: Bool) -> (CoinArrangement?, Int?) {

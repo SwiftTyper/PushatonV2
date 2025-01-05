@@ -10,4 +10,5 @@ import Foundation
 enum GameResult: String {
     case won = "Winner"
     case lost = "Game Over"
+    case tie = "Tie"
 }

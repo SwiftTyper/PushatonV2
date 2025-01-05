@@ -28,6 +28,10 @@ const schema = a.schema({
     id: a.id().required(),
     player1Id: a.string().required(),
     player2Id: a.string(),
+    player1Score: a.integer().required().default(0),
+    player2Score: a.integer().required().default(0),
+    isPlayer1Alive: a.boolean().required().default(true),
+    isPlayer2Alive: a.boolean().required().default(true),
     status: a.ref('GameStatus').required(),
     winner: a.string(),
     obstacles: a.ref('ObstacleData').required().array().required(),
@@ -43,8 +47,6 @@ const schema = a.schema({
     currentGameId: a.string(),
     position: a.ref('Position'),
     highScore: a.integer().required().default(0),
-    score: a.integer().required().default(0),
-    isAlive: a.boolean().required().default(true),
     isOnline: a.boolean().required().default(false),
   })
   .identifier(['username'])

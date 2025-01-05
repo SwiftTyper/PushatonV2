@@ -9,8 +9,6 @@ extension Player {
     case currentGameId
     case position
     case highScore
-    case score
-    case isAlive
     case isOnline
     case createdAt
     case updatedAt
@@ -41,8 +39,6 @@ extension Player {
       .field(player.currentGameId, is: .optional, ofType: .string),
       .field(player.position, is: .optional, ofType: .embedded(type: Position.self)),
       .field(player.highScore, is: .required, ofType: .int),
-      .field(player.score, is: .required, ofType: .int),
-      .field(player.isAlive, is: .required, ofType: .bool),
       .field(player.isOnline, is: .required, ofType: .bool),
       .field(player.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(player.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
@@ -72,12 +68,6 @@ extension ModelPath where ModelType == Player {
     }
   public var highScore: FieldPath<Int>   {
       int("highScore") 
-    }
-  public var score: FieldPath<Int>   {
-      int("score") 
-    }
-  public var isAlive: FieldPath<Bool>   {
-      bool("isAlive") 
     }
   public var isOnline: FieldPath<Bool>   {
       bool("isOnline") 

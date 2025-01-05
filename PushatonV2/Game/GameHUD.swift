@@ -16,11 +16,13 @@ class GameHUD: SKScene {
     
     init(with size: CGSize) {
         super.init(size: size)
-        addHearts()
     }
     
     override func didMove(to view: SKView) {
+        addHearts()
+        addPointsLabel()
         offsetHearts(view: view)
+        pointsLabel?.position.y -= view.safeAreaInsets.top
     }
     
     private func offsetHearts(view: SKView) {
@@ -69,8 +71,16 @@ class GameHUD: SKScene {
         }
         pointsLabel.text = "0"
         pointsLabel.fontSize = 40.0
-        pointsLabel.position = CGPoint(x: frame.minX + pointsLabel.frame.size.width, y: frame.maxY - pointsLabel.frame.size.height*2)
+        pointsLabel.horizontalAlignmentMode = .right
+        pointsLabel.position = CGPoint(
+            x: frame.maxX - 20,
+            y: frame.maxY - pointsLabel.frame.size.height/2
+        )
         addChild(pointsLabel)
+    }
+    
+    func updatePoints(with points: Int) {
+        pointsLabel?.text = "\(points)"
     }
     
     func removeHeart() -> Bool {

@@ -7,8 +7,6 @@ public struct Player: Model {
   public var currentGameId: String?
   public var position: Position?
   public var highScore: Int
-  public var score: Int
-  public var isAlive: Bool
   public var isOnline: Bool
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
@@ -17,15 +15,11 @@ public struct Player: Model {
       currentGameId: String? = nil,
       position: Position? = nil,
       highScore: Int,
-      score: Int,
-      isAlive: Bool,
       isOnline: Bool) {
     self.init(username: username,
       currentGameId: currentGameId,
       position: position,
       highScore: highScore,
-      score: score,
-      isAlive: isAlive,
       isOnline: isOnline,
       createdAt: nil,
       updatedAt: nil)
@@ -34,8 +28,6 @@ public struct Player: Model {
       currentGameId: String? = nil,
       position: Position? = nil,
       highScore: Int,
-      score: Int,
-      isAlive: Bool,
       isOnline: Bool,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
@@ -43,8 +35,6 @@ public struct Player: Model {
       self.currentGameId = currentGameId
       self.position = position
       self.highScore = highScore
-      self.score = score
-      self.isAlive = isAlive
       self.isOnline = isOnline
       self.createdAt = createdAt
       self.updatedAt = updatedAt

@@ -11,15 +11,10 @@ import Amplify
 
 @Observable
 class GameMatchViewModel {
-    var game: Game? = nil {
-        willSet {
-            continuation.yield(newValue)
-        }
-    }
-    
+    var game: Game? = nil { willSet { continuation.yield(newValue) } }
     var games: [Game] = []
-    var subscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
-    
+
+    var gameSubscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
     let (gameStream, continuation) = AsyncStream.makeStream(of: Game?.self)
     
     deinit {
@@ -38,21 +33,55 @@ class GameMatchViewModel {
             } else {
                 self.game = try await createGame(playerId: playerId)
             }
-            createSubscription()
+            createGameSubscription()
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func updateScore(playerId: String) -> Int {
+        if playerId == game?.player1Id {
+            game?.player1Score += 1
+            return game?.player1Score ?? 0
+        } else if playerId == game?.player2Id {
+            game?.player2Score += 1
+            return game?.player2Score ?? 0
+        }
+        return 0
     }
     
     @MainActor
     func lost(playerId: String) async {
         do {
             guard var game = game else { return }
-            game.status = .finished
+            guard game.status != .finished else { return }
             
-            let opponent = playerId == game.player1Id ? game.player2Id : game.player1Id
-            game.winner = opponent
-           
+            if playerId == game.player1Id {
+                game.isPlayer1Alive = false
+            } else if playerId == game.player2Id {
+                game.isPlayer2Alive = false
+            }
+            
+            if game.isPlayer1Alive == false && game.isPlayer2Alive == false {
+                if game.player1Score > game.player2Score {
+                    game.winner = game.player1Id
+                } else if game.player1Score == game.player2Score {
+                    game.winner = nil
+                } else {
+                    game.winner = game.player2Id
+                }
+                game.status = .finished
+            } else if game.isPlayer1Alive == true && game.isPlayer2Alive == false {
+                if game.player1Score > game.player2Score {
+                    game.winner = game.player1Id
+                    game.status = .finished
+                }
+            } else if game.isPlayer1Alive == false && game.isPlayer2Alive == true {
+                if game.player2Score > game.player1Score {
+                    game.winner = game.player2Id
+                    game.status = .finished
+                }
+            }
             _ = try await Amplify.API.mutate(request: .update(game))
         } catch {
             print(error.localizedDescription)
@@ -60,34 +89,34 @@ class GameMatchViewModel {
     }
     
     func getGameResult(playerId: String) -> GameResult {
-        game?.winner == playerId ? .won : .lost
+        guard let winner = game?.winner else { return .tie }
+        return winner == playerId ? .won : .lost
     }
     
     func cancelSubscription() {
-        subscription?.cancel()
+        gameSubscription?.cancel()
     }
     
     @MainActor
-    private func createSubscription() {
-        subscription = Amplify.API.subscribe(request: .subscription(of: Game.self, type: .onUpdate))
-        guard let subscription = subscription else { return }
+    private func createGameSubscription() {
+        gameSubscription = Amplify.API.subscribe(request: .subscription(of: Game.self, type: .onUpdate))
+        guard let subscription = gameSubscription else { return }
         Task {
             do {
                 for try await subscriptionEvent in subscription {
                     switch subscriptionEvent {
-                    case .connection(let subscriptionConnectionState):
-                        print("Subscription connect state is \(subscriptionConnectionState)")
-                    case .data(let result):
-                        switch result {
-                            case .success(let updatedGame):
-                                if updatedGame.id == game?.id {
-                                    print("Successfully got todo from subscription: \(updatedGame)")
-                                    self.game = updatedGame
-                                }
-                            case .failure(let error):
-                                print("Got failed result with \(error.errorDescription)")
+                        case .connection(_): break
+                        case .data(let result):
+                            switch result {
+                                case .success(let updatedGame):
+                                    if updatedGame.id == game?.id {
+                                        print("Successfully got todo from subscription: \(updatedGame)")
+                                        self.game = updatedGame
+                                    }
+                                case .failure(let error):
+                                    print("Got failed result with \(error.errorDescription)")
+                            }
                         }
-                    }
                 }
             } catch {
                 print("Subscription has terminated with \(error)")
@@ -124,6 +153,10 @@ class GameMatchViewModel {
         let game = Game(
             id: UUID().uuidString,
             player1Id: playerId,
+            player1Score: 0,
+            player2Score: 0,
+            isPlayer1Alive: true,
+            isPlayer2Alive: true,
             status: .waiting,
             obstacles: obstacles
         )

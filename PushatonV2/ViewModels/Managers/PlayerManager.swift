@@ -24,8 +24,6 @@ class PlayerManager {
             currentGameId: nil,
             position: nil,
             highScore: 0,
-            score: 0,
-            isAlive: false,
             isOnline: true
         )
         let result = try await Amplify.API.mutate(request: .create(player))

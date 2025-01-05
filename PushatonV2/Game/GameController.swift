@@ -57,14 +57,14 @@ class GameController: NSObject {
     }
     
     func gameOver() {
-//        if gameMatchViewModel.game?.status == .playing {
-//            scene.rootNode.childNodes.forEach { node in
-//                node.removeAllActions()
-//            }
-//            sceneView.isPlaying = false
-//            
-//            Task { await gameMatchViewModel.lost(playerId: playerViewModel.playerId) }
-//        }
+        if gameMatchViewModel.game?.status == .playing {
+            scene.rootNode.childNodes.forEach { node in
+                node.removeAllActions()
+            }
+            sceneView.isPlaying = false
+            
+            Task { await gameMatchViewModel.lost(playerId: playerViewModel.playerId) }
+        }
 //        DispatchQueue.main.async {
 //            let gameOverView = GameOverView(sceneView: self.sceneView)
 //            self.sceneView.addSubview(gameOverView)
