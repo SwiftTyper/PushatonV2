@@ -29,6 +29,12 @@ class PlayerNode: SCNNode {
         physicsBody?.collisionBitMask = CollisionCategory.obstacle.rawValue
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension PlayerNode {
     func jump() {
         guard !isManeuvering else { return  }
         isManeuvering = true
@@ -70,9 +76,5 @@ class PlayerNode: SCNNode {
         let size: Float = self.boundingBox.max.y - self.boundingBox.min.y
         position = .init(x: 0, y: Lane.segmentHeight + size/2, z: 0)
         gameController.scene.rootNode.addChildNode(self)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

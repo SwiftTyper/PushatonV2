@@ -11,12 +11,7 @@ class GameController: NSObject {
     
     var hud: GameHUD!
     var camera = Camera()
-    var ground = Ground()
-    var lane = Lane()
     var player = PlayerNode()
-    var obstacle = Obstacle()
-    var light = Light()
-    var coin = Coin()
 
     init(
         sceneView: SCNView,
@@ -34,12 +29,13 @@ class GameController: NSObject {
         setupListener()
         setupScene()
         setupGestures()
-        camera.setup(self)
-        ground.setup(self)
-        lane.setup(self)
         player.setup(self)
-        obstacle.setup(self)
-        light.setup(self)
+        camera.setup(self)
+        
+        Ground.setup(self)
+        Lane.setup(self)
+        Obstacle.setup(self)
+        Light.setup(self)
     }
     
     
@@ -78,8 +74,8 @@ class GameController: NSObject {
 
 extension GameController: SCNSceneRendererDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        lane.update(self)
-        obstacle.update(self)
+        Lane.update(self)
+        Obstacle.update(self)
         Coin.update(self)
     }
 }

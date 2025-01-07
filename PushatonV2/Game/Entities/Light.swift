@@ -9,7 +9,7 @@ import Foundation
 import SceneKit
 
 class Light {
-    func setup(_ gameController: GameController) {
+    static func setup(_ gameController: GameController) {
         let ambientLight = SCNNode()
         ambientLight.light = SCNLight()
         ambientLight.light?.type = .ambient

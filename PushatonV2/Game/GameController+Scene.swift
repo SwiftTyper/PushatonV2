@@ -20,13 +20,13 @@ extension GameController {
         sceneView.showsStatistics = true
         sceneView.debugOptions = [.showPhysicsShapes]
         sceneView.isPlaying = true
-       
-        sceneView.present(scene, with: .fade(withDuration: 0.5), incomingPointOfView: nil, completionHandler: nil)
         
         DispatchQueue.main.async {
             self.hud = .init(with: self.sceneView.bounds.size)
             self.sceneView.overlaySKScene = self.hud
             self.sceneView.overlaySKScene?.isUserInteractionEnabled = false
         }
+       
+        sceneView.present(scene, with: .fade(withDuration: 0.5), incomingPointOfView: nil, completionHandler: nil)
     }
 }

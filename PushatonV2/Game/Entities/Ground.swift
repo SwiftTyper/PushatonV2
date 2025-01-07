@@ -35,9 +35,10 @@ class Ground: SCNNode {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func setup(_ gameController: GameController) {
-        gameController.scene.rootNode.addChildNode(self)
+}
+
+extension Ground {
+    static func setup(_ gameController: GameController) {
+        gameController.scene.rootNode.addChildNode(Ground())
     }
-    
 }

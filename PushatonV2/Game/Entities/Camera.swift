@@ -28,11 +28,13 @@ class Camera: SCNNode {
         return position.z + viewDistance
     }
     
-    func setup(_ gameController: GameController) {
-        gameController.scene.rootNode.addChildNode(self)
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension Camera {
+    func setup(_ gameController: GameController) {
+        gameController.scene.rootNode.addChildNode(Camera())
     }
 }
