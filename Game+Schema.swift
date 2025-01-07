@@ -8,10 +8,6 @@ extension Game {
     case id
     case player1Id
     case player2Id
-    case player1Score
-    case player2Score
-    case isPlayer1Alive
-    case isPlayer2Alive
     case status
     case winner
     case obstacles
@@ -41,10 +37,6 @@ extension Game {
       .field(game.id, is: .required, ofType: .string),
       .field(game.player1Id, is: .required, ofType: .string),
       .field(game.player2Id, is: .optional, ofType: .string),
-      .field(game.player1Score, is: .required, ofType: .int),
-      .field(game.player2Score, is: .required, ofType: .int),
-      .field(game.isPlayer1Alive, is: .required, ofType: .bool),
-      .field(game.isPlayer2Alive, is: .required, ofType: .bool),
       .field(game.status, is: .required, ofType: .enum(type: GameStatus.self)),
       .field(game.winner, is: .optional, ofType: .string),
       .field(game.obstacles, is: .required, ofType: .embeddedCollection(of: ObstacleData.self)),
@@ -70,18 +62,6 @@ extension ModelPath where ModelType == Game {
     }
   public var player2Id: FieldPath<String>   {
       string("player2Id") 
-    }
-  public var player1Score: FieldPath<Int>   {
-      int("player1Score") 
-    }
-  public var player2Score: FieldPath<Int>   {
-      int("player2Score") 
-    }
-  public var isPlayer1Alive: FieldPath<Bool>   {
-      bool("isPlayer1Alive") 
-    }
-  public var isPlayer2Alive: FieldPath<Bool>   {
-      bool("isPlayer2Alive") 
     }
   public var winner: FieldPath<String>   {
       string("winner") 

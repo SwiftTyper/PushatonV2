@@ -133,7 +133,8 @@ extension Coin {
             if coin.value(forKey: "collected") as? Bool != true {
                 coin.removeFromParentNode()
                 coin.setValue(true, forKey: "collected")
-                let score = gameController.gameMatchViewModel.updateScore(playerId: gameController.playerViewModel.playerId)
+               
+                let score = gameController.playerViewModel.updateScore()
                 gameController.hud.updatePoints(with: score)
             }
         }

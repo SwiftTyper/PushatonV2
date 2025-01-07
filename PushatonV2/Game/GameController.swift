@@ -63,7 +63,11 @@ class GameController: NSObject {
             }
             sceneView.isPlaying = false
             
-            Task { await gameMatchViewModel.lost(playerId: playerViewModel.playerId) }
+            Task {
+                await playerViewModel.die()
+                await gameMatchViewModel.lost(player: playerViewModel.player, opponent: playerViewModel.opponent)
+                await playerViewModel.resetScore()
+            }
         }
 //        DispatchQueue.main.async {
 //            let gameOverView = GameOverView(sceneView: self.sceneView)

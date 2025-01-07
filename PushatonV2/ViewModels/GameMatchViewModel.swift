@@ -38,50 +38,39 @@ class GameMatchViewModel {
             print(error.localizedDescription)
         }
     }
-    
-    func updateScore(playerId: String) -> Int {
-        if playerId == game?.player1Id {
-            game?.player1Score += 1
-            return game?.player1Score ?? 0
-        } else if playerId == game?.player2Id {
-            game?.player2Score += 1
-            return game?.player2Score ?? 0
-        }
-        return 0
-    }
-    
+
     @MainActor
-    func lost(playerId: String) async {
+    func lost(player: Player?, opponent: Player?) async {
         do {
-            guard var game = game else { return }
+            guard var game = game, let player = player, let opponent = opponent else { return }
             guard game.status != .finished else { return }
-            
-            if playerId == game.player1Id {
-                game.isPlayer1Alive = false
-            } else if playerId == game.player2Id {
-                game.isPlayer2Alive = false
-            }
-            
-            if game.isPlayer1Alive == false && game.isPlayer2Alive == false {
-                if game.player1Score > game.player2Score {
-                    game.winner = game.player1Id
-                } else if game.player1Score == game.player2Score {
+       
+            if player.isPlayerAlive == false && opponent.isPlayerAlive == false {
+                if player.score > opponent.score {
+                    game.winner = player.username
+                } else if player.score == opponent.score {
                     game.winner = nil
                 } else {
-                    game.winner = game.player2Id
+                    game.winner = opponent.username
                 }
                 game.status = .finished
-            } else if game.isPlayer1Alive == true && game.isPlayer2Alive == false {
-                if game.player1Score > game.player2Score {
-                    game.winner = game.player1Id
-                    game.status = .finished
-                }
-            } else if game.isPlayer1Alive == false && game.isPlayer2Alive == true {
-                if game.player2Score > game.player1Score {
-                    game.winner = game.player2Id
-                    game.status = .finished
-                }
+            } else if (player.isPlayerAlive == true && opponent.isPlayerAlive == false) && (player.score > opponent.score) {
+                game.winner = player.username
+                game.status = .finished
+            } else if (player.isPlayerAlive == false && opponent.isPlayerAlive == true) && (player.score < opponent.score) {
+                game.winner = opponent.username
+                game.status = .finished
             }
+            
+            print("OPPONENT")
+            print(opponent)
+            
+            print("PLAYER")
+            print(player)
+            
+            print("GAME")
+            print(game)
+            
             _ = try await Amplify.API.mutate(request: .update(game))
         } catch {
             print(error.localizedDescription)
@@ -97,7 +86,6 @@ class GameMatchViewModel {
         gameSubscription?.cancel()
     }
     
-    @MainActor
     private func createGameSubscription() {
         gameSubscription = Amplify.API.subscribe(request: .subscription(of: Game.self, type: .onUpdate))
         guard let subscription = gameSubscription else { return }
@@ -153,10 +141,6 @@ class GameMatchViewModel {
         let game = Game(
             id: UUID().uuidString,
             player1Id: playerId,
-            player1Score: 0,
-            player2Score: 0,
-            isPlayer1Alive: true,
-            isPlayer2Alive: true,
             status: .waiting,
             obstacles: obstacles
         )
@@ -176,7 +160,10 @@ class GameMatchViewModel {
         let result = try await Amplify.API.query(request: request)
         return try result.get().elements.first
     }
-    
+}
+
+//MARK: Debug
+extension GameMatchViewModel {
     func leaveGame() {
         
     }
