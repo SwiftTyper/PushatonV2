@@ -22,11 +22,10 @@ struct MenuView: View {
         
         Button("Play") {
             Task {
-                await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId)
                 await playerViewModel.setAlive()
+                await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId)
                 let opponentId = playerViewModel.playerId == gameMatchViewModel.game?.player1Id ? gameMatchViewModel.game?.player2Id : gameMatchViewModel.game?.player1Id
-                playerViewModel.opponent = Player(username: opponentId ?? "", highScore: 0, isOnline: false)
-                playerViewModel.createPlayerSubscription()
+                playerViewModel.createOpponentSubscription(id: opponentId ?? "")
             }
         }
         

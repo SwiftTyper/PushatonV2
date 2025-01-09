@@ -62,7 +62,6 @@ class GameController: NSObject {
             Task {
                 await playerViewModel.die()
                 await gameMatchViewModel.lost(player: playerViewModel.player, opponent: playerViewModel.opponent)
-                await playerViewModel.resetScore()
             }
         }
 //        DispatchQueue.main.async {

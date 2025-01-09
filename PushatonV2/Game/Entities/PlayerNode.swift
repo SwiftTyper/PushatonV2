@@ -34,6 +34,16 @@ class PlayerNode: SCNNode {
     }
 }
 
+extension PlayerNode: Collidable {
+    func didCollide(with node: SCNNode, _ gameController: GameController) {
+        switch node {
+            case is Obstacle:
+                self.die(removeHeart: gameController.hud.removeHeart, onFinalDeath: gameController.gameOver)
+            default: return
+        }
+    }
+}
+
 extension PlayerNode {
     func jump() {
         guard !isManeuvering else { return  }

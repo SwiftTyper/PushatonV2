@@ -9,5 +9,5 @@ import Foundation
 import SceneKit
 
 protocol Collidable {
-    func didCollide(with node: SCNNode)
+    func didCollide(with node: SCNNode, _ gameController: GameController)
 }

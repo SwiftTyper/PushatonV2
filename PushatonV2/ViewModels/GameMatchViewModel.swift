@@ -98,7 +98,7 @@ class GameMatchViewModel {
                             switch result {
                                 case .success(let updatedGame):
                                     if updatedGame.id == game?.id {
-                                        print("Successfully got todo from subscription: \(updatedGame)")
+                                        print("Successfully got todo from subscription:")
                                         self.game = updatedGame
                                     }
                                 case .failure(let error):

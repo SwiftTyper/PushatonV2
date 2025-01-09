@@ -47,6 +47,12 @@ class Obstacle: SCNNode {
     }
 }
 
+extension Obstacle: Collidable {
+    func didCollide(with node: SCNNode, _ gameController: GameController) {
+        return
+    }
+}
+
 extension Obstacle {
     static func update(_ gameController: GameController) {
         gameController.scene.rootNode.enumerateChildNodes { node, _ in

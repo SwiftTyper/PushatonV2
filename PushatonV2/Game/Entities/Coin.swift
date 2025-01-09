@@ -58,7 +58,22 @@ class Coin: SCNNode {
     }
 }
 
-// MARK: - Coin Spawning and Movement
+extension Coin: Collidable {
+    func didCollide(with node: SCNNode, _ gameController: GameController) {
+        switch node {
+            case is PlayerNode:
+                if self.value(forKey: "collected") as? Bool != true {
+                    self.removeFromParentNode()
+                    self.setValue(true, forKey: "collected")
+                   
+                    let score = gameController.playerViewModel.updateScore()
+                    gameController.hud.updatePoints(with: score)
+                }
+            default: return
+        }
+    }
+}
+
 extension Coin {
     static func spawnCoins(scene: SCNScene, obstacle: SCNNode, data: ObstacleData) {
         guard let type = data.coinArrangement else { return }
@@ -117,25 +132,6 @@ extension Coin {
          
             if node.position.z > gameController.camera.position.z + Float(Coin.radius) {
                 node.removeFromParentNode()
-            }
-        }
-    }
-    
-    static func collect(contact: SCNPhysicsContact, _ gameController: GameController) {
-        var coinNode: SCNNode?
-        if contact.nodeA.name == "coin" {
-            coinNode = contact.nodeA
-        } else if contact.nodeB.name == "coin" {
-            coinNode = contact.nodeB
-        }
-        
-        if let coin = coinNode {
-            if coin.value(forKey: "collected") as? Bool != true {
-                coin.removeFromParentNode()
-                coin.setValue(true, forKey: "collected")
-               
-                let score = gameController.playerViewModel.updateScore()
-                gameController.hud.updatePoints(with: score)
             }
         }
     }

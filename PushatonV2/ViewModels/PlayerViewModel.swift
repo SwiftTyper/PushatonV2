@@ -81,32 +81,6 @@ class PlayerViewModel {
         return newScore
     }
     
-//    @MainActor
-//    func updateScore() -> Int {
-//        // Take a snapshot of the player before the async boundary
-//        guard var playerSnapshot = player else { return 0 }
-//        playerSnapshot.score = (playerSnapshot.score ?? 0) + 1
-//        
-//        if playerSnapshot.score > playerSnapshot.highScore {
-//            playerSnapshot.highScore = playerSnapshot.score ?? 0
-//        }
-//        // Update the main reference
-//        player = playerSnapshot
-//        
-//        // Create a separate copy for the async task
-//        let updateCopy = playerSnapshot
-//        
-//        Task { @MainActor in
-//            do {
-//                _ = try await Amplify.API.mutate(request: .update(updateCopy))
-//            } catch {
-//                print(error.localizedDescription)
-//            }
-//        }
-//        
-//        return playerSnapshot.score ?? 0
-//    }
-    
     private func createPlayerIfMissing() async {
         do {
             let attributes = try await Amplify.Auth.fetchUserAttributes()
@@ -123,7 +97,7 @@ class PlayerViewModel {
         }
     }
     
-    func createPlayerSubscription() {
+    func createOpponentSubscription(id: String) {
         subscription = Amplify.API.subscribe(request: .subscription(of: Player.self, type: .onUpdate))
         guard let subscription = subscription else { return }
         Task {
@@ -134,13 +108,10 @@ class PlayerViewModel {
                         case .data(let result):
                             switch result {
                                 case .success(let updatedPlayer):
-//                                    if updatedPlayer.username == player?.username {
-//                                        self.player = updatedPlayer
-//                                    } else
-                                    if updatedPlayer.username == self.opponent?.username {
+                                    if updatedPlayer.username == id {
                                         self.opponent = updatedPlayer
                                     }
-                                    print("Successfully got todo from subscription: \(updatedPlayer)")
+                                    print("Got update")
                                 case .failure(let error):
                                     print("Got failed result with \(error.errorDescription)")
                             }

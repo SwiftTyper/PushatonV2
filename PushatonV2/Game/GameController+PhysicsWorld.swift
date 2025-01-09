@@ -13,14 +13,15 @@ extension GameController: SCNPhysicsContactDelegate {
         let nodeA = contact.nodeA
         let nodeB = contact.nodeB
         
-        let isPlayerA = nodeA.physicsBody?.categoryBitMask == CollisionCategory.player.rawValue
-        let isPlayerB = nodeB.physicsBody?.categoryBitMask == CollisionCategory.player.rawValue
-        
-        if (isPlayerA && nodeB.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) ||
-            (isPlayerB && nodeA.physicsBody?.categoryBitMask == CollisionCategory.obstacle.rawValue) {
-            self.player.die(removeHeart: hud.removeHeart, onFinalDeath: gameOver)
+        handleCollision(of: nodeA, with: nodeB)
+        handleCollision(of: nodeB, with: nodeA)
+    }
+    
+    func handleCollision(of nodeOne: SCNNode, with nodeTwo: SCNNode) {
+        if let nodeOne = nodeOne as? Collidable {
+            nodeOne.didCollide(with: nodeTwo, self)
+        } else {
+            print("Node with unhandled collision!")
         }
-        
-        Coin.collect(contact: contact, self)
     }
 }

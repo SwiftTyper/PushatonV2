@@ -33,6 +33,9 @@ struct GameView: View {
                                 Button("Go Back") {
                                     gameMatchViewModel.game = nil
                                     gameMatchViewModel.cancelSubscription()
+                                    Task {
+                                        await playerViewModel.resetScore()
+                                    }
                                 }
                             }
                         }
