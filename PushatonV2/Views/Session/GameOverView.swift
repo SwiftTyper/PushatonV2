@@ -8,11 +8,6 @@
 import Foundation
 import SwiftUI
 
-extension Font {
-    public static let largerTitle: Font = Font.system(size: 40, weight: .bold, design: .default)
-    public static let largestTitle: Font = Font.system(size: 70, weight: .bold, design: .default)
-}
-
 struct GameResultView: View {
     let playerScore: Int
     let opponentScore: Int
@@ -36,7 +31,7 @@ struct GameResultView: View {
                     
                     VStack(spacing: 40) {
                         Text(result.getTitle(difference: scoreDifference))
-                            .font(.system(size: 48, weight: .bold))
+                            .font(.evenLargerTitle)
                             .foregroundStyle(.primaryText)
                             .shadow(radius: 2)
                         
@@ -52,7 +47,7 @@ struct GameResultView: View {
                     if result == .lost {
                         VStack(spacing: 60) {
                             Text("Score")
-                                .font(.title2)
+                                .font(.title)
                                 .foregroundStyle(.primaryText)
                             
                             ScoreProgressBar(
@@ -168,7 +163,7 @@ struct GameResultView_Previews: PreviewProvider {
             playerScore: 20,
             opponentScore: 30,
             opponentId: "Player123",
-            result: .tie,
+            result: .lost,
             action: {},
             dismissAction: {}
         )

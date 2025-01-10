@@ -142,7 +142,7 @@ struct ScoreProgressBar: View {
                 .font(.headline)
                 .foregroundStyle(Color(red: 0.15, green: 0.2, blue: 0.4))
                 .fixedSize()
-                .offset(y: -mainThumbHeight)
+                .offset(y: mainThumbHeight)
         }
     }
     
@@ -150,7 +150,7 @@ struct ScoreProgressBar: View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 background
-                    .frame(maxWidth: geometry.size.width - opponentThumbHeight/2)
+                    .frame(maxWidth: max(geometry.size.width - opponentThumbHeight/2, 0))
                 
                 opponentThumb
                     .position(
@@ -159,7 +159,7 @@ struct ScoreProgressBar: View {
                     )
                 
                 foreground
-                    .frame(width: (geometry.size.width - opponentThumbHeight/2) * progress)
+                    .frame(width: max(0, (geometry.size.width - opponentThumbHeight/2)) * progress)
                 
                 mainThumb
                     .position(
@@ -174,8 +174,8 @@ struct ScoreProgressBar: View {
 
 #Preview {
     ScoreProgressBar(
-        score: 200,
-        maxScore: 300,
+        score: 27,
+        maxScore: 30,
         opponentId: "Player123"
     )
 }

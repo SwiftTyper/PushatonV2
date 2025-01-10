@@ -26,14 +26,15 @@ class GameMatchViewModel {
     }
     
     @MainActor
-    func startMatch(playerId: String) async {
+    func startMatch(playerId: String, createOpponentSubscriptionAction: @escaping (String) -> Void) async {
         do {
             if let existingGame = try await getQueuedGame() {
                 self.game = try await joinGame(existingGame, playerId: playerId)
+                createOpponentSubscriptionAction(self.game?.player1Id ?? "")
             } else {
                 self.game = try await createGame(playerId: playerId)
             }
-            createGameSubscription()
+            createGameSubscription(createOpponentSubscriptionAction: createOpponentSubscriptionAction)
         } catch {
             print(error.localizedDescription)
         }
@@ -87,7 +88,7 @@ class GameMatchViewModel {
         gameSubscription?.cancel()
     }
     
-    private func createGameSubscription() {
+    private func createGameSubscription(createOpponentSubscriptionAction: @escaping (String) -> Void) {
         gameSubscription = Amplify.API.subscribe(request: .subscription(of: Game.self, type: .onUpdate))
         guard let subscription = gameSubscription else { return }
         Task {
@@ -100,6 +101,12 @@ class GameMatchViewModel {
                                 case .success(let updatedGame):
                                     if updatedGame.id == game?.id {
                                         print("Successfully got todo from subscription:")
+                                        
+                                        if game?.player2Id == nil && updatedGame.player2Id != nil {
+                                            createOpponentSubscriptionAction(updatedGame.player2Id ?? "")
+                                            print("created subscription with \(updatedGame.player2Id ?? "")")
+                                        }
+                                        
                                         self.game = updatedGame
                                     }
                                 case .failure(let error):

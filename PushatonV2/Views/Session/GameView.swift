@@ -28,16 +28,21 @@ struct GameView: View {
                         .ignoresSafeArea(.all)
                     case .finished:
                         GameResultView(
-                            playerScore: playerViewModel.player?.score ?? 0,
-                            opponentScore: playerViewModel.opponent?.score ?? 0,
+                            playerScore: playerViewModel.player?.score ?? -1,
+                            opponentScore: playerViewModel.opponent?.score ?? -1,
                             opponentId: playerViewModel.opponent?.username ?? "",
                             result: gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId),
-                            action: {},
-                            dismissAction: {
+                            action: {
+                                Task { await playerViewModel.resetScore() }
                                 gameMatchViewModel.game = nil
                                 gameMatchViewModel.cancelSubscription()
                                 playerViewModel.cancelSubscription()
+                            },
+                            dismissAction: {
                                 Task { await playerViewModel.resetScore() }
+                                gameMatchViewModel.game = nil
+                                gameMatchViewModel.cancelSubscription()
+                                playerViewModel.cancelSubscription()
                             }
                         )
                 }
