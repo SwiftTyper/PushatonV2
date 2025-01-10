@@ -41,6 +41,7 @@ class GameMatchViewModel {
 
     @MainActor
     func lost(player: Player?, opponent: Player?) async {
+        print("entered bruh")
         do {
             guard var game = game, let player = player, let opponent = opponent else { return }
             guard game.status != .finished else { return }

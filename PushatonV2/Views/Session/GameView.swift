@@ -15,36 +15,37 @@ struct GameView: View {
     @State var playerViewModel: PlayerViewModel = .init()
     
     var body: some View {
-        if let status = gameMatchViewModel.game?.status {
-            switch status {
-                case .waiting:
-                    ProgressView("Looking for players")
-                case .playing, .finished:
-                    GameSceneView(
-                        gameMatchViewModel: gameMatchViewModel,
-                        playerViewModel: playerViewModel
-                    )
-                    .ignoresSafeArea(.all)
-                    .overlay {
-                        if gameMatchViewModel.game?.status == .finished {
-                            VStack(spacing: 20) {
-                                Text(gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId).rawValue)
-                                
-                                Button("Go Back") {
-                                    gameMatchViewModel.game = nil
-                                    gameMatchViewModel.cancelSubscription()
-                                    Task {
-                                        await playerViewModel.resetScore()
-                                    }
-                                }
+        Group {
+            if let status = gameMatchViewModel.game?.status {
+                switch status {
+                    case .waiting:
+                        ProgressView("Looking for players")
+                    case .playing:
+                        GameSceneView(
+                            gameMatchViewModel: gameMatchViewModel,
+                            playerViewModel: playerViewModel
+                        )
+                        .ignoresSafeArea(.all)
+                    case .finished:
+                        GameResultView(
+                            playerScore: playerViewModel.player?.score ?? 0,
+                            opponentScore: playerViewModel.opponent?.score ?? 0,
+                            opponentId: playerViewModel.opponent?.username ?? "",
+                            result: gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId),
+                            action: {},
+                            dismissAction: {
+                                gameMatchViewModel.game = nil
+                                gameMatchViewModel.cancelSubscription()
+                                playerViewModel.cancelSubscription()
+                                Task { await playerViewModel.resetScore() }
                             }
-                        }
-                    }
+                        )
+                }
+            } else {
+                MenuView()
             }
-        } else {
-            MenuView()
-                .environment(gameMatchViewModel)
-                .environment(playerViewModel)
         }
+        .environment(gameMatchViewModel)
+        .environment(playerViewModel)
     }
 }
