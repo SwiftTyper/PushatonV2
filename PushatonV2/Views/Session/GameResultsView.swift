@@ -14,8 +14,9 @@ struct GameResultView: View {
     let opponentId: String
     let result: GameResult
     
-    let action: () -> Void
-    let dismissAction: () -> Void
+    let onAction: () -> Void
+    let onDismiss: () -> Void
+    let onAppear: () -> Void
     
     var scoreDifference: Int {
         abs(opponentScore - playerScore)
@@ -106,9 +107,9 @@ struct GameResultView: View {
                     Spacer()
                     
                     VStack(spacing: 40) {
-                        Button(action: {
-                            action()
-                        }) {
+                        Button {
+                            onAction()
+                        } label: {
                             HStack {
                                 Image(systemName: result == .won ? "play.fill" :  "arrow.clockwise")
                                 Text("\(result == .won ? "Play" : "Try") Again")
@@ -137,7 +138,7 @@ struct GameResultView: View {
             .toolbar {
                 ToolbarItem(placement: .navigation) {
                     Button {
-                        dismissAction()
+                        onDismiss()
                     } label: {
                         Image(systemName: "chevron.backward")
                     }
@@ -146,13 +147,8 @@ struct GameResultView: View {
                     .tint(.primaryText)
                 }
             }
-            .background(
-                Color(
-                    red: 0.1,
-                    green: 0.3,
-                    blue: 0.8
-                ).ignoresSafeArea()
-            )
+            .background(Color.primaryBackground.ignoresSafeArea())
+            .onAppear(perform: onAppear)
         }
     }
 }
@@ -164,8 +160,9 @@ struct GameResultView_Previews: PreviewProvider {
             opponentScore: 30,
             opponentId: "Player123",
             result: .lost,
-            action: {},
-            dismissAction: {}
+            onAction: {},
+            onDismiss: {},
+            onAppear: {}
         )
     }
 }

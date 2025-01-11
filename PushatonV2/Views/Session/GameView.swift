@@ -32,15 +32,17 @@ struct GameView: View {
                             opponentScore: playerViewModel.opponent?.score ?? -1,
                             opponentId: playerViewModel.opponent?.username ?? "",
                             result: gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId),
-                            action: {
-                                Task { await playerViewModel.resetScore() }
-                                gameMatchViewModel.game = nil
-                                gameMatchViewModel.cancelSubscription()
-                                playerViewModel.cancelSubscription()
+                            onAction: {
+                                Task {
+                                    await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
+                                        playerViewModel.createOpponentSubscription(id: opponentId)
+                                    }
+                                }
                             },
-                            dismissAction: {
-                                Task { await playerViewModel.resetScore() }
+                            onDismiss: {
                                 gameMatchViewModel.game = nil
+                            },
+                            onAppear: {
                                 gameMatchViewModel.cancelSubscription()
                                 playerViewModel.cancelSubscription()
                             }

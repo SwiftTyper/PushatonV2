@@ -13,7 +13,7 @@ class Camera: SCNNode {
         super.init()
         camera = SCNCamera()
         position = SCNVector3(0, 4, 8)
-        eulerAngles = SCNVector3(x: Float(CGFloat(-15).toRadians()), y: 0, z: 0)
+        eulerAngles = SCNVector3(x: Float(-15).toRadians(), y: 0, z: 0)
     }
     
     var visibleWidth: CGFloat {

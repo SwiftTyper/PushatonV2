@@ -22,6 +22,7 @@ struct MenuView: View {
         
         Button("Play") {
             Task {
+                await playerViewModel.resetScore()
                 await playerViewModel.setAlive()
                 await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
                     playerViewModel.createOpponentSubscription(id: opponentId)

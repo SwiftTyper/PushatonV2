@@ -38,7 +38,6 @@ class GameController: NSObject {
         Light.setup(self)
     }
     
-    
     func setupListener() {
         Task { @MainActor in
             for await game in gameMatchViewModel.gameStream {
@@ -64,10 +63,6 @@ class GameController: NSObject {
                 await gameMatchViewModel.lost(player: playerViewModel.player, opponent: playerViewModel.opponent)
             }
         }
-//        DispatchQueue.main.async {
-//            let gameOverView = GameOverView(sceneView: self.sceneView)
-//            self.sceneView.addSubview(gameOverView)
-//        }
     }
 }
 

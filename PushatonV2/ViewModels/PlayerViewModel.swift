@@ -97,10 +97,15 @@ class PlayerViewModel {
         }
     }
     
+    func initialOpponentFetch(id: String) async throws {
+        self.opponent = try await PlayerManager.getPlayer(username: id, signedIn: true)
+    }
+    
     func createOpponentSubscription(id: String) {
         subscription = Amplify.API.subscribe(request: .subscription(of: Player.self, type: .onUpdate))
         guard let subscription = subscription else { return }
         Task {
+            try await initialOpponentFetch(id: id)
             do {
                 for try await subscriptionEvent in subscription {
                     switch subscriptionEvent {

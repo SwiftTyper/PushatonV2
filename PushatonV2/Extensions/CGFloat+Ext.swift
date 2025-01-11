@@ -8,14 +8,11 @@
 import Foundation
 
 extension CGFloat {
-    private static let degreesPerRadians = CGFloat(Double.pi/180)
-    private static let radiansPerDegrees = CGFloat(180/Double.pi)
-
     func toRadians() -> CGFloat {
-        return self * CGFloat.degreesPerRadians
+        return self * CGFloat(Double.pi/180)
     }
     
     func toDegrees() -> CGFloat {
-        return self * CGFloat.radiansPerDegrees
+        return self * CGFloat(180/Double.pi)
     }
 }
