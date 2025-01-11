@@ -7,6 +7,7 @@
 
 import Foundation
 import SceneKit
+import SpriteKit
 
 extension GameController {
     func setupScene() {
@@ -24,9 +25,11 @@ extension GameController {
         DispatchQueue.main.async {
             self.hud = .init(with: self.sceneView.bounds.size)
             self.sceneView.overlaySKScene = self.hud
+            self.sceneView.overlaySKScene?.isHidden = false
+            self.sceneView.overlaySKScene?.scaleMode = .resizeFill
             self.sceneView.overlaySKScene?.isUserInteractionEnabled = false
         }
-       
+        
         sceneView.present(scene, with: .fade(withDuration: 0.5), incomingPointOfView: nil, completionHandler: nil)
     }
 }

@@ -18,52 +18,35 @@ class GameHUD: SKScene {
         super.init(size: size)
     }
     
-    override func didMove(to view: SKView) {
-        addHearts()
-        addPointsLabel()
-        offsetHearts(view: view)
-        pointsLabel?.position.y -= view.safeAreaInsets.top
-    }
-    
-    private func offsetHearts(view: SKView) {
-        self.enumerateChildNodes(withName: "heart") { node, index in
-            node.position.y = self.size.height - view.safeAreaInsets.top
+    override func didChangeSize(_ oldSize: CGSize) {
+        super.didChangeSize(oldSize)
+        if let view = view {
+            DispatchQueue.main.async {
+                self.addHearts()
+                self.addPointsLabel()
+            }
         }
     }
     
     func addHearts() {
         let spacing: CGFloat = 8
+        let yPosition = self.size.height - (view?.safeAreaInsets.top ?? 0)
         for index in -1...1 {
             let heart = Heart(.full)
             let xPosition = self.size.width/2 + (heart.size.width + spacing) * CGFloat(index)
             heart.position.x = xPosition
+            heart.position.y = yPosition
             hearts.append(heart)
 
             let emptyHeart = Heart(.empty)
             emptyHeart.position.x = xPosition
+            emptyHeart.position.y = yPosition
             
             addChild(emptyHeart)
             addChild(heart)
         }
     }
-    
-    func addMenuLabels() {
-        logoLabel = SKLabelNode(fontNamed: "8BIT WONDER Nominal")
-        tapToPlayLabel = SKLabelNode(fontNamed: "8BIT WONDER Nominal")
-        guard let logoLabel = logoLabel, let tapToPlayLabel = tapToPlayLabel else {
-            return
-        }
-        logoLabel.text = "Pushaton"
-        logoLabel.fontSize = 35.0
-        logoLabel.position = CGPoint(x: frame.midX, y: frame.midY)
-        addChild(logoLabel)
-        
-        tapToPlayLabel.text = "Tap to Play"
-        tapToPlayLabel.fontSize = 25.0
-        tapToPlayLabel.position = CGPoint(x: frame.midX, y: frame.midY-logoLabel.frame.size.height)
-        addChild(tapToPlayLabel)
-    }
-    
+   
     func addPointsLabel() {
         pointsLabel = SKLabelNode(fontNamed: "8BIT WONDER Nominal")
         guard let pointsLabel = pointsLabel else {
@@ -74,7 +57,7 @@ class GameHUD: SKScene {
         pointsLabel.horizontalAlignmentMode = .right
         pointsLabel.position = CGPoint(
             x: frame.maxX - 20,
-            y: frame.maxY - pointsLabel.frame.size.height/2
+            y: frame.maxY - pointsLabel.frame.size.height/2 - (view?.safeAreaInsets.top ?? 0)
         )
         addChild(pointsLabel)
     }
