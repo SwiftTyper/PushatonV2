@@ -45,64 +45,7 @@ struct GameResultView: View {
                     
                     Spacer()
                     
-                    if result == .lost {
-                        VStack(spacing: 60) {
-                            Text("Score")
-                                .font(.title)
-                                .foregroundStyle(.primaryText)
-                            
-                            ScoreProgressBar(
-                                score: playerScore,
-                                maxScore: opponentScore,
-                                opponentId: opponentId
-                            )
-                            .frame(maxWidth: geo.size.width * 2/3)
-                        }
-                    } else if result == .won {
-                        VStack(spacing: 30) {
-                            VStack(spacing: 2) {
-                                Text("Your Score")
-                                    .font(.headline)
-                                    .foregroundStyle(.primaryText)
-                                
-                                Text("\(playerScore)")
-                                    .font(.largestTitle)
-                                    .foregroundStyle(.gold)
-                            }
-                            
-                            VStack(spacing: 2) {
-                                Text("Opponent's Score")
-                                    .font(.headline)
-                                    .foregroundStyle(.primaryText)
-                                
-                                Text("\(opponentScore)")
-                                    .font(.largerTitle)
-                                    .foregroundStyle(.primaryText)
-                            }
-                        }
-                    } else {
-                        MyEqualWidthHStack {
-                            VStack(spacing: 8) {
-                                Text("Your Score")
-                                    .font(.headline)
-                                    .foregroundStyle(.primaryText)
-                                
-                                Text("\(playerScore)")
-                                    .font(.largestTitle)
-                                    .foregroundStyle(.primaryText)
-                            }
-                            
-                            VStack(spacing: 8) {
-                                Text("Opponent's Score")
-                                    .font(.headline)
-                                    .foregroundStyle(.primaryText)
-                                
-                                Text("\(opponentScore)")
-                                    .font(.largestTitle)
-                                    .foregroundStyle(.primaryText)
-                            }
-                        }
-                    }
+                    scoreView(geo: geo)
                     
                     Spacer()
                     
@@ -113,19 +56,9 @@ struct GameResultView: View {
                             HStack {
                                 Image(systemName: result == .won ? "play.fill" :  "arrow.clockwise")
                                 Text("\(result == .won ? "Play" : "Try") Again")
-                                    .font(.title3)
                             }
-                            .bold()
-                            .foregroundStyle(.primaryText)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(result == .won ? Color.green : Color.red)
-                                    .shadow(radius: 5)
-                            )
-                            .padding(.horizontal, 50)
                         }
+                        .buttonStyle(PlayAgainButtonStyle(type: result))
                         
                         Text("You are in the top **\(percentagePassed)%** of players")
                             .foregroundColor(.primaryText)
@@ -151,6 +84,69 @@ struct GameResultView: View {
             .onAppear(perform: onAppear)
         }
     }
+    
+    @ViewBuilder
+    func scoreView(geo: GeometryProxy) -> some View {
+        switch result {
+            case .won:
+                VStack(spacing: 30) {
+                    VStack(spacing: 2) {
+                        Text("Your Score")
+                            .font(.headline)
+                            .foregroundStyle(.primaryText)
+                        
+                        Text("\(playerScore)")
+                            .font(.largestTitle)
+                            .foregroundStyle(.gold)
+                    }
+                    
+                    VStack(spacing: 2) {
+                        Text("Opponent's Score")
+                            .font(.headline)
+                            .foregroundStyle(.primaryText)
+                        
+                        Text("\(opponentScore)")
+                            .font(.largerTitle)
+                            .foregroundStyle(.primaryText)
+                    }
+                }
+            case .lost:
+                VStack(spacing: 60) {
+                    Text("Score")
+                        .font(.title)
+                        .foregroundStyle(.primaryText)
+                    
+                    ScoreProgressBar(
+                        score: playerScore,
+                        maxScore: opponentScore,
+                        opponentId: opponentId
+                    )
+                    .frame(maxWidth: geo.size.width * 2/3)
+                }
+            case .tie:
+                MyEqualWidthHStack {
+                    VStack(spacing: 8) {
+                        Text("Your Score")
+                            .font(.headline)
+                            .foregroundStyle(.primaryText)
+                        
+                        Text("\(playerScore)")
+                            .font(.largestTitle)
+                            .foregroundStyle(.primaryText)
+                    }
+                    
+                    VStack(spacing: 8) {
+                        Text("Opponent's Score")
+                            .font(.headline)
+                            .foregroundStyle(.primaryText)
+                        
+                        Text("\(opponentScore)")
+                            .font(.largestTitle)
+                            .foregroundStyle(.primaryText)
+                    }
+                }
+        }
+    }
 }
 
 struct GameResultView_Previews: PreviewProvider {
@@ -159,7 +155,7 @@ struct GameResultView_Previews: PreviewProvider {
             playerScore: 20,
             opponentScore: 30,
             opponentId: "Player123",
-            result: .lost,
+            result: .won,
             onAction: {},
             onDismiss: {},
             onAppear: {}

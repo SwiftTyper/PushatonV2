@@ -79,6 +79,7 @@ extension Obstacle {
     }
     
     static func setup(_ gameController: GameController) {
+        obstacles = []
         let segmentLength = Obstacle.length + Obstacle.spacing
         let numberOfObstacles = Int(ceil(gameController.camera.lastVisibleZPosition / segmentLength))
         guard let gameObstacles = gameController.gameMatchViewModel.game?.obstacles else { return }

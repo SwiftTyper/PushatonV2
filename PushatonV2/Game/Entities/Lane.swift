@@ -42,6 +42,7 @@ class Lane: SCNNode {
 
 extension Lane {
     static func setup(_ gameController: GameController) {
+        segments = []
         let width = CGFloat(0.4 * gameController.camera.visibleWidth)
         let numberOfSegments = Int(ceil(gameController.camera.lastVisibleZPosition / segmentLength)) + 1
         
