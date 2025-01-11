@@ -64,6 +64,10 @@ class PlayerViewModel {
         
         // Create new score based on current optional score
         let newScore = (player!.score ?? 0) + 1
+        
+        if newScore > player?.highScore {
+            player?.highScore = newScore
+        }
         // Update the original player's score
         player!.score = newScore
         
@@ -130,5 +134,15 @@ class PlayerViewModel {
     
     func cancelSubscription() {
         subscription?.cancel()
+    }
+    
+    func clearHighscore() async {
+        do {
+            player?.highScore = 0
+            guard let player = player else { return }
+            _ = try await Amplify.API.mutate(request: .update(player))
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

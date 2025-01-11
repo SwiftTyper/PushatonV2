@@ -36,6 +36,10 @@ struct MenuView: View {
                     Button("Clear Games") {
                         Task { await gameMatchViewModel.clearGames() }
                     }
+                
+                    Button("Clear Highscore") {
+                        Task { await  playerViewModel.clearHighscore() }
+                    }
                     
                     Text(playerViewModel.playerId)
                     
@@ -80,16 +84,34 @@ struct MenuView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        
-                    } label: {
-                        
+                    HStack(spacing: 6){
+                        Image(systemName: "crown.fill")
+                        Text("\(playerViewModel.player?.highScore ?? 0)")
+                            .bold()
+                            .font(.title3)
                     }
-                    .tint(Color.primaryText)
+                    .foregroundStyle(.gold)
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.purple)
+                    )
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.primaryBackground.ignoresSafeArea(.all))
+            .background(
+                ZStack {
+                    AnimatedBackground(
+                        colors: [
+                            Color.purple,
+                            Color.primaryBackground
+                        ]
+                    )
+                    
+                    ParticlesView()
+                }
+            )
         }
     }
 }
