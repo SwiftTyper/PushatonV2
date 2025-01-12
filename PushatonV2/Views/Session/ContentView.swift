@@ -16,7 +16,7 @@ struct ContentView: View {
         Group {
             switch sessionViewModel.state {
                 case .loggedIn: GameView()
-                default: ProgressView()
+                default: GameProgressView()
             }
         }
         .modifier(ShowAuthenticationIfNeededModifier())

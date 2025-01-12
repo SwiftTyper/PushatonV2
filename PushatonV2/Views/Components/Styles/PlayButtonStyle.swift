@@ -10,6 +10,19 @@ import SwiftUI
 
 struct PlayButtonStyle: ButtonStyle {
     @State private var isAnimating: Bool = false
+    var isDisabled: Bool
+    
+    init(isDisabled: Bool) {
+        self.isDisabled = isDisabled
+    }
+    
+    var color: Color {
+        if isDisabled {
+            return Color.green.disabled()
+        } else {
+            return isAnimating ? Color.green.lighten(by: 0.05) : Color.green
+        }
+    }
   
     func makeBody(configuration: Configuration) -> some View {
         return configuration.label
@@ -20,23 +33,34 @@ struct PlayButtonStyle: ButtonStyle {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(isAnimating ? Color.green.lighten(by: 0.05) : Color.green)
-                    .shadow(color: Color.green.opacity(0.8), radius: 5)
+                    .fill(color)
+                    .shadow(color: color.opacity(0.8), radius: 5)
             )
             .padding(.horizontal, 50)
             .scaleEffect(isAnimating ? 1 : 0.92)
             .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isAnimating)
             .onAppear {
-                isAnimating = true
+                if !isDisabled {
+                    isAnimating = true
+                }
+            }
+            .onChange(of: isDisabled) { _, newValue in
+                isAnimating = !newValue
             }
     }
 }
 
 
 #Preview {
+    @Previewable @State var isDisabled = true
     Button("Tap Me") {
         
     }
-    .buttonStyle(PlayButtonStyle())
+    .buttonStyle(PlayButtonStyle(isDisabled: isDisabled))
+    .onAppear {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            isDisabled = false
+        }
+    }
 }
 

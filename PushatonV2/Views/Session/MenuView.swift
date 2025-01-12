@@ -58,8 +58,8 @@ struct MenuView: View {
                 
                 Button {
                     Task {
-                        await playerViewModel.resetScore()
-                        await playerViewModel.setAlive()
+                        //could potentially be moved to run in parrallel (if the gameready executes first then no problem becuase gamematchviewmodel will fetch the initla status, however if it doesn't and the startMatch extectures first then also not a problem as it will have set up the listener and reacted to the new changes)
+                        await playerViewModel.makeGameReady()
                         await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
                             playerViewModel.createOpponentSubscription(id: opponentId)
                         }
@@ -70,7 +70,12 @@ struct MenuView: View {
                         Text("Play 1v1")
                     }
                 }
-                .buttonStyle(PlayButtonStyle())
+                .buttonStyle(
+                    PlayButtonStyle(
+                        isDisabled: playerViewModel.player == nil
+                    )
+                )
+                .disabled(playerViewModel.player == nil)
                 
                 Spacer()
                     .frame(height: 50)
@@ -89,9 +94,17 @@ struct MenuView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 6){
                         Image(systemName: "crown.fill")
-                        Text("\(playerViewModel.player?.highScore ?? 0)")
-                            .bold()
-                            .font(.title3)
+                        if playerViewModel.player == nil {
+                            ActivityIndicator(
+                                isAnimating: .constant(true),
+                                style: .medium,
+                                color: UIColor(named: "gold")!
+                            )
+                        } else {
+                            Text("\(playerViewModel.player?.highScore ?? 0)")
+                                .bold()
+                                .font(.title3)
+                        }
                     }
                     .foregroundStyle(.gold)
                     .padding(.vertical, 6)

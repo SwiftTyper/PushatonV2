@@ -28,4 +28,15 @@ extension Color {
 
         return self
     }
+    
+    func disabled(saturationReduction: CGFloat = 0.4, brightnessIncrease: CGFloat = 0.1) -> Color {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        
+        if UIColor(self).getHue(&h, saturation: &s, brightness: &b, alpha: &a) {
+            let newSaturation = max(min(s - saturationReduction, 1.0), 0.0)
+            let newBrightness = max(min(b + brightnessIncrease, 1.0), 0.0)
+            return Color(hue: h, saturation: newSaturation, brightness: newBrightness, opacity: a)
+        }
+        return self
+    }
 }

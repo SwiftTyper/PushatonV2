@@ -13,6 +13,8 @@ import Amplify
 class GameMatchViewModel {
     var game: Game? = nil { willSet { continuation.yield(newValue) } }
     var games: [Game] = []
+    
+    var isLoading: Bool = false
 
     var gameSubscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
     let (gameStream, continuation) = AsyncStream.makeStream(of: Game?.self)
@@ -28,6 +30,7 @@ class GameMatchViewModel {
     @MainActor
     func startMatch(playerId: String, createOpponentSubscriptionAction: @escaping (String) -> Void) async {
         do {
+            isLoading = true
             if let existingGame = try await getQueuedGame() {
                 self.game = try await joinGame(existingGame, playerId: playerId)
                 createOpponentSubscriptionAction(self.game?.player1Id ?? "")
@@ -35,14 +38,15 @@ class GameMatchViewModel {
                 self.game = try await createGame(playerId: playerId)
             }
             createGameSubscription(createOpponentSubscriptionAction: createOpponentSubscriptionAction)
+            isLoading = false
         } catch {
+            isLoading = false
             print(error.localizedDescription)
         }
     }
 
     @MainActor
     func lost(player: Player?, opponent: Player?) async {
-        print("entered bruh")
         do {
             guard var game = game, let player = player, let opponent = opponent else { return }
             guard game.status != .finished else { return }

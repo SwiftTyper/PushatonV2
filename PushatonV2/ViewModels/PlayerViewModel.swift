@@ -17,6 +17,8 @@ class PlayerViewModel {
     var subscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Player>>?
     var playerId: String { player?.username ?? "" }
     
+    var isLoading: Bool = false
+
     init() {
         Task { await createPlayerIfMissing() }
     }
@@ -38,40 +40,29 @@ class PlayerViewModel {
         }
     }
     
-    func setAlive() async {
+    func makeGameReady() async {
         do {
+            isLoading = true
+            player?.score = 0
             player?.isPlayerAlive = true
             guard let player = player else { return }
             _ = try await Amplify.API.mutate(request: .update(player))
+            isLoading = false
         } catch {
             print(error.localizedDescription)
+            isLoading = false
         }
     }
-    
-    func resetScore() async {
-        do {
-            player?.score = 0
-            guard let player = player else { return }
-            _ = try await Amplify.API.mutate(request: .update(player))
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
+  
     func updateScore() -> Int {
-        // First check if player exists
         guard player != nil else { return 0 }
-        
-        // Create new score based on current optional score
         let newScore = (player!.score ?? 0) + 1
         
         if newScore > player?.highScore {
             player?.highScore = newScore
         }
-        // Update the original player's score
-        player!.score = newScore
         
-        // Create a copy for the async task
+        player!.score = newScore
         let updatedPlayer = player!
         
         Task { @MainActor in
@@ -101,7 +92,7 @@ class PlayerViewModel {
         }
     }
     
-    func initialOpponentFetch(id: String) async throws {
+    private func initialOpponentFetch(id: String) async throws {
         self.opponent = try await PlayerManager.getPlayer(username: id, signedIn: true)
     }
     
@@ -135,7 +126,10 @@ class PlayerViewModel {
     func cancelSubscription() {
         subscription?.cancel()
     }
-    
+}
+
+//MARK: Debug
+extension PlayerViewModel {
     func clearHighscore() async {
         do {
             player?.highScore = 0

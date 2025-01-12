@@ -10,7 +10,6 @@ import SwiftUI
 import Amplify
 
 struct GameView: View {
-    @Environment(SessionViewModel.self) var sessionViewModel
     @State var gameMatchViewModel: GameMatchViewModel = .init()
     @State var playerViewModel: PlayerViewModel = .init()
     
@@ -22,46 +21,50 @@ struct GameView: View {
     
     var body: some View {
         Group {
-            if let status = gameMatchViewModel.game?.status {
-                switch status {
-                    case .waiting:
-                        ProgressView("Looking for players")
-                    case .playing:
-                        GameSceneView(
-                            gameMatchViewModel: gameMatchViewModel,
-                            playerViewModel: playerViewModel
-                        )
-                        .ignoresSafeArea(.all)
-                    case .finished:
-                        if highscoreShown {
-                            HighScoreView(score: playerViewModel.player?.score ?? -1) {
-                                highscoreDimissed = true
-                            }
-                        } else {
-                            GameResultView(
-                                playerScore: playerViewModel.player?.score ?? -1,
-                                opponentScore: playerViewModel.opponent?.score ?? -1,
-                                opponentId: playerViewModel.opponent?.username ?? "",
-                                result: gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId),
-                                onAction: {
-                                    Task {
-                                        await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
-                                            playerViewModel.createOpponentSubscription(id: opponentId)
-                                        }
-                                    }
-                                },
-                                onDismiss: {
-                                    gameMatchViewModel.game = nil
-                                },
-                                onAppear: {
-                                    gameMatchViewModel.cancelSubscription()
-                                    playerViewModel.cancelSubscription()
-                                }
-                            )
-                        }
-                }
+            if gameMatchViewModel.isLoading || playerViewModel.isLoading {
+                GameProgressView()
             } else {
-                MenuView()
+                if let status = gameMatchViewModel.game?.status {
+                    switch status {
+                        case .waiting:
+                            GameProgressView()
+                        case .playing:
+                            GameSceneView(
+                                gameMatchViewModel: gameMatchViewModel,
+                                playerViewModel: playerViewModel
+                            )
+                            .ignoresSafeArea(.all)
+                        case .finished:
+                            if highscoreShown {
+                                HighScoreView(score: playerViewModel.player?.score ?? -1) {
+                                    highscoreDimissed = true
+                                }
+                            } else {
+                                GameResultView(
+                                    playerScore: playerViewModel.player?.score ?? -1,
+                                    opponentScore: playerViewModel.opponent?.score ?? -1,
+                                    opponentId: playerViewModel.opponent?.username ?? "",
+                                    result: gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId),
+                                    onAction: {
+                                        Task {
+                                            await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
+                                                playerViewModel.createOpponentSubscription(id: opponentId)
+                                            }
+                                        }
+                                    },
+                                    onDismiss: {
+                                        gameMatchViewModel.game = nil
+                                    },
+                                    onAppear: {
+                                        gameMatchViewModel.cancelSubscription()
+                                        playerViewModel.cancelSubscription()
+                                    }
+                                )
+                            }
+                    }
+                } else {
+                    MenuView()
+                }
             }
         }
         .environment(gameMatchViewModel)
