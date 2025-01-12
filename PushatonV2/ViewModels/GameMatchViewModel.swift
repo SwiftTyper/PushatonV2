@@ -130,7 +130,7 @@ class GameMatchViewModel {
         game.player2Id = playerId
         game.status = .playing
         
-        let result = try await Amplify.API.query(request: .update(game))
+        let result = try await Amplify.API.mutate(request: .update(game))
         return try result.get()
     }
     

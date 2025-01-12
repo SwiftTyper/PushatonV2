@@ -120,9 +120,11 @@ extension Coin: Collidable {
         switch node {
             case is PlayerNode:
                 if self.value(forKey: "collected") as? Bool != true {
+//                    self.runAction(Sound.reward.action)
+                    gameController.scene.rootNode.runAction(Sound.reward.action)
                     self.removeFromParentNode()
                     self.setValue(true, forKey: "collected")
-                   
+                    
                     let score = gameController.playerViewModel.updateScore()
                     gameController.hud.updatePoints(with: score)
                 }

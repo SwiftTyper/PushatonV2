@@ -101,7 +101,7 @@ struct GameResultView: View {
                     }
                     
                     VStack(spacing: 2) {
-                        Text("Opponent's Score")
+                        Text("\(opponentId)'s Score")
                             .font(.headline)
                             .foregroundStyle(.primaryText)
                         

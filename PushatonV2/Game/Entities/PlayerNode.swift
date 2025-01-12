@@ -39,6 +39,7 @@ extension PlayerNode: Collidable {
         switch node {
             case is Obstacle:
                 self.die(removeHeart: gameController.hud.removeHeart, onFinalDeath: gameController.gameOver)
+                self.runAction(Sound.collision.action)
             default: return
         }
     }
@@ -53,6 +54,7 @@ extension PlayerNode {
         moveUpAction.timingMode = .easeOut
         moveDownAction.timingMode = .easeIn
         let jumpAction = SCNAction.sequence([moveUpAction,moveDownAction])
+        self.runAction(Sound.jump.action)
         
         self.runAction(jumpAction) { [weak self] in
             self?.isManeuvering = false
@@ -62,6 +64,7 @@ extension PlayerNode {
     func die(removeHeart: @escaping () -> Bool, onFinalDeath: @escaping () -> Void) {
         guard !isHit else { return }
         isHit = true
+        self.runAction(Sound.death.action)
         
         if removeHeart() {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
