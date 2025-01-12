@@ -56,6 +56,63 @@ class Coin: SCNNode {
         )
         self.runAction(rotationAnimation)
     }
+    
+//    private func setupCoin(radius: CGFloat) {
+//        guard let modelScene = SCNScene(named: "art.scnassets/coin-crown.obj") else {
+//            print("Failed to load coin model")
+//            return
+//        }
+//        
+//        guard let modelNode = modelScene.rootNode.childNodes.first else {
+//            print("No geometry found in model")
+//            return
+//        }
+//       
+//        self.name = "coin"
+//        
+//        let material = SCNMaterial()
+//        material.diffuse.contents = UIColor(red: 1.0, green: 0.8, blue: 0.0, alpha: 1.0)
+//        material.metalness.contents = 1.0
+//        material.roughness.contents = 0.2
+//        material.specular.contents = UIColor.white
+//        
+//        modelNode.geometry?.materials = [material]
+//        
+//        self.geometry = modelNode.geometry
+//        
+//        // Set precise dimensions
+//        let desiredWidth: CGFloat = 0.9  // 2.5 cm diameter
+//        let desiredHeight: CGFloat = 0.1 // 2 mm thickness
+//        
+//        let boundingBox = modelNode.boundingBox
+//        let currentWidth = CGFloat(boundingBox.max.x - boundingBox.min.x)
+//        let currentHeight = CGFloat(boundingBox.max.y - boundingBox.min.y)
+//        
+//        let scaleX = desiredWidth / currentWidth
+//        let scaleY = desiredHeight / currentHeight
+//        let scaleZ = desiredWidth / currentWidth  // Keep circular shape
+//        
+//        self.scale = SCNVector3(scaleX, scaleY, scaleZ)
+//        
+//        self.eulerAngles.x = Float.pi / 2
+//        
+//        // Create a custom physics shape that matches the coin size exactly
+//        let physicsGeometry = SCNCylinder(radius: desiredWidth/2, height: desiredHeight)
+//        let shape = SCNPhysicsShape(geometry: physicsGeometry, options: [
+//            SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.convexHull
+//        ])
+//        
+//        self.physicsBody = SCNPhysicsBody(type: .kinematic, shape: shape)
+//        self.physicsBody?.categoryBitMask = CollisionCategory.coin.rawValue
+//        self.physicsBody?.contactTestBitMask = CollisionCategory.player.rawValue
+//        self.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
+//        self.physicsBody?.isAffectedByGravity = false
+//        
+//        let rotationAnimation = SCNAction.repeatForever(
+//            SCNAction.rotateBy(x: 0, y: CGFloat.pi * 2, z: 0, duration: 3)
+//        )
+//        self.runAction(rotationAnimation)
+//    }
 }
 
 extension Coin: Collidable {

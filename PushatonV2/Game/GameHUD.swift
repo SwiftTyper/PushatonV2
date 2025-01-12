@@ -20,8 +20,8 @@ class GameHUD: SKScene {
     
     override func didChangeSize(_ oldSize: CGSize) {
         super.didChangeSize(oldSize)
-        if let view = view {
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if self.view?.safeAreaInsets.top != 0 && self.pointsLabel == nil {
                 self.addHearts()
                 self.addPointsLabel()
             }

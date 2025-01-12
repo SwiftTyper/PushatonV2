@@ -17,7 +17,8 @@ struct MenuView: View {
         NavigationStack {
             VStack {
                 Spacer()
-                
+                    .frame(height: 50)
+
                 Text("Pushaton V2")
                     .font(.evenLargerTitle)
                     .foregroundStyle(Color.primaryText)
@@ -72,6 +73,7 @@ struct MenuView: View {
                 .buttonStyle(PlayButtonStyle())
                 
                 Spacer()
+                    .frame(height: 50)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -80,6 +82,7 @@ struct MenuView: View {
                     } label: {
                         Image(systemName: "gearshape.fill")
                     }
+                    .font(.title3)
                     .tint(Color.primaryText)
                 }
                 
@@ -95,19 +98,23 @@ struct MenuView: View {
                     .padding(.horizontal, 12)
                     .background(
                         RoundedRectangle(cornerRadius: 5)
-                            .fill(Color.purple)
+                            .fill(.blue)
                     )
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
                 ZStack {
-                    AnimatedBackground(
+                    LinearGradient(
                         colors: [
-                            Color.purple,
+                            Color.blue,
+                            Color.primaryBackground,
                             Color.primaryBackground
-                        ]
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
+                    .ignoresSafeArea()
                     
                     ParticlesView()
                 }
