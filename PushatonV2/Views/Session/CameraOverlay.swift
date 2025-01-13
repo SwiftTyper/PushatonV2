@@ -43,25 +43,26 @@ struct CameraOverlay: View {
                      await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
                          playerViewModel.createOpponentSubscription(id: opponentId)
                      }
+                     viewModel.isShowingCameraOverlay = false
                  }
             }
             viewModel.updateLabels(with: .startingPrediction)
         }
-        .onDisappear {
-            viewModel.stopConditionMonitoring()
-        }
+//        .onDisappear {
+//            viewModel.stopConditionMonitoring()
+//        }
         .frame(
             width: (
-                viewModel.isShowingGame || viewModel.isGameOver
+                !viewModel.isShowingCameraOverlay
             ) ? UIScreen.main.bounds.size.width/4 : UIScreen.main.bounds.size.width,
             height: (
-                viewModel.isShowingGame || viewModel.isGameOver
+                !viewModel.isShowingCameraOverlay
             ) ? UIScreen.main.bounds.size.height/4 : UIScreen.main.bounds.size.height
         )
-        .clipShape(RoundedRectangle(cornerRadius: (viewModel.isShowingGame || viewModel.isGameOver) ? 30 : 0))
-        .overlay(alignment: (viewModel.isShowingGame || viewModel.isGameOver) ? .bottomLeading : .top) {
+        .clipShape(RoundedRectangle(cornerRadius: !viewModel.isShowingCameraOverlay ? 30 : 0))
+        .overlay(alignment: !viewModel.isShowingCameraOverlay ? .bottomLeading : .top) {
             if viewModel.currentFrame != nil {
-                if (viewModel.isShowingGame || viewModel.isGameOver) {
+                if !viewModel.isShowingCameraOverlay {
                     predictionLabels
                 } else {
                     VStack {
@@ -72,8 +73,8 @@ struct CameraOverlay: View {
                 }
             }
         }
-        .containerShape(RoundedRectangle(cornerRadius: (viewModel.isShowingGame || viewModel.isGameOver) ? 15 : 0))
-        .padding([.leading, .bottom], (viewModel.isShowingGame || viewModel.isGameOver) ? 12 : 0)
+        .containerShape(RoundedRectangle(cornerRadius: !viewModel.isShowingCameraOverlay ? 15 : 0))
+        .padding([.leading, .bottom], !viewModel.isShowingCameraOverlay ? 12 : 0)
         .ignoresSafeArea(.all)
     }
 }
@@ -135,7 +136,7 @@ extension CameraOverlay {
     
     var bottomBar: some View {
         Button("Cancel") {
-            gameMatchViewModel.showCameraOverlay = false
+            viewModel.isShowingCameraOverlay = false
         }
         .buttonStyle(TertiaryButtonStyle())
         .foregroundStyle(Color.blue)

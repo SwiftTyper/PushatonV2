@@ -29,7 +29,6 @@ struct GameView: View {
                                     gameMatchViewModel: gameMatchViewModel,
                                     playerViewModel: playerViewModel
                                 )
-                                .ignoresSafeArea(.all)
                             case .finished:
                                 GameOverView()
                         }
@@ -37,7 +36,7 @@ struct GameView: View {
                         MenuView()
                     }
                     
-                    if gameMatchViewModel.showCameraOverlay {
+                    if predictionViewModel.isShowingCameraOverlay || gameMatchViewModel.game?.status == .playing {
                         CameraOverlay()
                     }
                 }
@@ -46,13 +45,9 @@ struct GameView: View {
         }
         .onAppear {
             NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: .main) { _ in
-//                self.isPortrait = isInPortrait()
                 self.predictionViewModel.videoCapture.updateDeviceOrientation()
-                print(UIDevice.current.orientation)
             }
             self.predictionViewModel.videoCapture.updateDeviceOrientation()
-            print(UIDevice.current.orientation.rawValue)
-//            self.isPortrait = isInPortrait()
         }
         .onDisappear {
             NotificationCenter.default.removeObserver(UIDevice.orientationDidChangeNotification)

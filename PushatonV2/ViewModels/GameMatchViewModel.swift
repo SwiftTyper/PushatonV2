@@ -15,7 +15,6 @@ class GameMatchViewModel {
     var games: [Game] = []
     
     var isLoading: Bool = false
-    var showCameraOverlay: Bool = false
 
     var gameSubscription: AmplifyAsyncThrowingSequence<GraphQLSubscriptionEvent<Game>>?
     let (gameStream, continuation) = AsyncStream.makeStream(of: Game?.self)

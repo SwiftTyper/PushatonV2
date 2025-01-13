@@ -12,6 +12,7 @@ import Amplify
 struct MenuView: View {
     @Environment(GameMatchViewModel.self) var gameMatchViewModel
     @Environment(PlayerViewModel.self) var playerViewModel
+    @EnvironmentObject var predictionViewModel: PredictionViewModel
     
     var body: some View {
         NavigationStack {
@@ -57,14 +58,7 @@ struct MenuView: View {
                 Spacer()
                 
                 Button {
-                    gameMatchViewModel.showCameraOverlay = true
-//                    Task {
-//                        //could potentially be moved to run in parrallel (if the gameready executes first then no problem becuase gamematchviewmodel will fetch the initla status, however if it doesn't and the startMatch extectures first then also not a problem as it will have set up the listener and reacted to the new changes)
-//                        await playerViewModel.makeGameReady()
-//                        await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
-//                            playerViewModel.createOpponentSubscription(id: opponentId)
-//                        }
-//                    }
+                    predictionViewModel.isShowingCameraOverlay = true
                 } label: {
                     HStack {
                         Image(systemName: "play.fill")

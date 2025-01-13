@@ -11,6 +11,7 @@ import SwiftUI
 struct GameOverView: View {
     @Environment(GameMatchViewModel.self) var gameMatchViewModel
     @Environment(PlayerViewModel.self) var playerViewModel
+    @EnvironmentObject var predictionViewModel: PredictionViewModel
     
     @State private var highscoreDimissed: Bool = false
     
@@ -30,11 +31,7 @@ struct GameOverView: View {
                 opponentId: playerViewModel.opponent?.username ?? "",
                 result: gameMatchViewModel.getGameResult(playerId: playerViewModel.playerId),
                 onAction: {
-                    Task {
-                        await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
-                            playerViewModel.createOpponentSubscription(id: opponentId)
-                        }
-                    }
+                    predictionViewModel.isShowingCameraOverlay = true
                 },
                 onDismiss: {
                     gameMatchViewModel.game = nil

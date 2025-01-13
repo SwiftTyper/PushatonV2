@@ -15,14 +15,11 @@ class PredictionViewModel: ObservableObject {
     @Published var confidence: String = "Observing..."
     @Published var predicted: String = ""
     
-    @Published var isGameOver: Bool = false
-    @Published var showOnboarding: Bool = true
-
+    @Published var isShowingCameraOverlay: Bool = false
     @Published var isPersonFullyDetected: Bool = false
     @Published private var isWithinPersonDetectedGracePeriod: Bool = false
     
     @Published var countdownTime: Int = 0
-    @Published var isShowingGame: Bool = false
 
     private var personDetectedGracePeriod: Timer?
     private var pushupPositionGracePeriod: Timer?
@@ -88,9 +85,9 @@ class PredictionViewModel: ObservableObject {
             .sink { [weak self] (isPersonFullyDetected, isWithinPersonDetectedGracePeriod) in
                 guard let self = self else { return }
 //                guard !self.showOnboarding else { return }
-                if isPersonFullyDetected && !self.isShowingGame {
+                if isPersonFullyDetected {
                     self.startConditionMetTimer(onConditionMetAction: onConditionMetAction)
-                } else if !isWithinPersonDetectedGracePeriod && self.isShowingGame && !isPersonFullyDetected {
+//                } else if !isWithinPersonDetectedGracePeriod && self.isShowingGame && !isPersonFullyDetected {
                     //MARK: To do handle when player steps out of camera
 //                    withAnimation {
 //                        self.isShowingGame = false
@@ -121,7 +118,7 @@ class PredictionViewModel: ObservableObject {
                     self.countdownTime -= 1
                 } else {
                     onConditionMetAction()
-                    self.isShowingGame = true
+                    self.stopConditionMonitoring()
                     self.resetConditionMetTimer()
                 }
             }
