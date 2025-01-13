@@ -80,6 +80,8 @@ extension PlayerNode {
         guard !isManeuvering else { return }
         isManeuvering = true
         
+        self.runAction(Sound.dash.action)
+        
         self.squashAndUnsquashHeight(durationPerAction: 0.20, intervalBetweenActions: 0.3) {
             self.isManeuvering = false
         }

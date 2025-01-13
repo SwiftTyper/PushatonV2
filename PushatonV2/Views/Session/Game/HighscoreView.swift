@@ -101,6 +101,12 @@ struct HighScoreView: View {
         .onTapGesture {
             dimissAction()
         }
+        .onAppear {
+            AudioPlayerManager.shared.play(.record)
+        }
+        .onDisappear() {
+            AudioPlayerManager.shared.stopAudio(.record)
+        }
     }
 }
 

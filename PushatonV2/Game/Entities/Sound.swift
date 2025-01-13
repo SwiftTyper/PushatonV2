@@ -10,15 +10,12 @@ import SpriteKit
 import AVFAudio
 import SceneKit
 
-//    case countdown = "countdown.wav"
-//    case record = "record.mp3"
-
 enum Sound : String {
     case death = "death.mp3"
     case jump = "jump.wav"
     case reward = "reward.wav"
-    case collision = "box crash.mp3"
-    case dash = ""
+    case collision = "crash.mp3"
+    case dash = "dash.mp3"
     
     var action: SCNAction {
         return SCNAction.playAudio(.init(fileNamed: rawValue)!, waitForCompletion: false)

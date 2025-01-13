@@ -29,13 +29,14 @@ struct CameraOverlay: View {
                     .bold()
                     .foregroundStyle(viewModel.getConditionCountdownColor())
                     .contentTransition(.numericText(countsDown: true))
-//                    .onAppear {
-//                      AudioPlayerManager.shared.playCountdownSound()
-//                    }
+                    .onAppear {
+                        AudioPlayerManager.shared.play(.countdown)
+                    }
             }
         }
         .onAppear {
             viewModel.setupConditionMonitoring {
+                AudioPlayerManager.shared.play(.background)
                 Task {
              //                        //could potentially be moved to run in parrallel (if the gameready executes first then no problem becuase gamematchviewmodel will fetch the initla status, however if it doesn't and the startMatch extectures first then also not a problem as it will have set up the listener and reacted to the new changes)
                      await playerViewModel.makeGameReady()
@@ -57,7 +58,6 @@ struct CameraOverlay: View {
                 viewModel.isShowingGame || viewModel.isGameOver
             ) ? UIScreen.main.bounds.size.height/4 : UIScreen.main.bounds.size.height
         )
-        .background(Color.green)
         .clipShape(RoundedRectangle(cornerRadius: (viewModel.isShowingGame || viewModel.isGameOver) ? 30 : 0))
         .overlay(alignment: (viewModel.isShowingGame || viewModel.isGameOver) ? .bottomLeading : .top) {
             if viewModel.currentFrame != nil {

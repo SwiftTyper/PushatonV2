@@ -43,9 +43,6 @@ class PredictionViewModel: ObservableObject {
         
         videoCapture = VideoCapture()
         videoCapture.delegate = self
-        
-//        self.showOnboarding = shouldShowOnboarding()
-//        setupConditionMonitoring()
     }
     
     deinit {
@@ -124,9 +121,6 @@ class PredictionViewModel: ObservableObject {
                     self.countdownTime -= 1
                 } else {
                     onConditionMetAction()
-//                    withAnimation {
-//                        self.isShowingGame = true
-//                    }
                     self.isShowingGame = true
                     self.resetConditionMetTimer()
                 }
@@ -142,7 +136,7 @@ class PredictionViewModel: ObservableObject {
     private func resetConditionMetTimer() {
         countdownTimer?.cancel()
         countdownTimer = nil
-//        AudioPlayerManager.shared.stopAudio()
+        AudioPlayerManager.shared.stopAudio(.countdown)
         countdownTime = 3
     }
     

@@ -38,6 +38,7 @@ struct GameOverView: View {
                 },
                 onDismiss: {
                     gameMatchViewModel.game = nil
+                    AudioPlayerManager.shared.stopAudio(.background)
                 },
                 onAppear: {
                     gameMatchViewModel.cancelSubscription()
