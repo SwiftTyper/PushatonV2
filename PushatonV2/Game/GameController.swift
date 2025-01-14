@@ -87,15 +87,12 @@ class GameController: NSObject {
     }
     
     func handlePlayerStateChanged(to playerState: String) {
-        print(playerState)
-        
         let isPlayerUp = (playerState == PushupClassifierV3.Label.pushupUp.rawValue || playerState == PushupClassifierV3.Label.pushupUpHold.rawValue)
         let wasPlayerDown = (previousPlayerState == nil || previousPlayerState == PushupClassifierV3.Label.pushupDownHold.rawValue || previousPlayerState == PushupClassifierV3.Label.pushupDown.rawValue)
         let isPlayerDown = (playerState == PushupClassifierV3.Label.pushupDown.rawValue || playerState == PushupClassifierV3.Label.pushupDownHold.rawValue)
         let wasPlayerUp = previousPlayerState == nil || previousPlayerState == PushupClassifierV3.Label.pushupUp.rawValue || previousPlayerState == PushupClassifierV3.Label.pushupUpHold.rawValue
         
         let action = getSuggestedAction()
-        print(action)
         
         if (action == .jump || action == nil) && isPlayerUp && wasPlayerDown {
             player.jump()
@@ -107,17 +104,19 @@ class GameController: NSObject {
     }
     
     func gameOver() {
-//        if gameMatchViewModel.game?.status == .playing {
-//            scene.rootNode.childNodes.forEach { node in
-//                node.removeAllActions()
-//            }
-//            sceneView.isPlaying = false
-//            
-//            Task {
-//                await playerViewModel.die()
-//                await gameMatchViewModel.lost(player: playerViewModel.player, opponent: playerViewModel.opponent)
-//            }
-//        }
+        if gameMatchViewModel.game?.status == .playing {
+            scene.rootNode.childNodes.forEach { node in
+                node.removeAllActions()
+            }
+            sceneView.isPlaying = false
+            
+            hud.showWaitingForOpponent()
+            
+            Task {
+                await playerViewModel.die()
+                await gameMatchViewModel.lost(player: playerViewModel.player, opponent: playerViewModel.opponent)
+            }
+        }
     }
 }
 

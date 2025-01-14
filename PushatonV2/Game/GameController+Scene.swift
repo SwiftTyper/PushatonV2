@@ -34,8 +34,8 @@ extension GameController {
        
         sceneView.backgroundColor = .skyBlue
         sceneView.allowsCameraControl = false
-        sceneView.showsStatistics = true
-        sceneView.debugOptions = [.showPhysicsShapes]
+//        sceneView.showsStatistics = true
+//        sceneView.debugOptions = [.showPhysicsShapes]
         sceneView.isPlaying = true
         
         DispatchQueue.main.async {

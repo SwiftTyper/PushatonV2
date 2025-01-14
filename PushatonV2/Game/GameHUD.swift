@@ -12,6 +12,7 @@ class GameHUD: SKScene {
     var logoLabel: SKLabelNode?
     var tapToPlayLabel: SKLabelNode?
     var pointsLabel: SKLabelNode?
+    private var waitingLabel: SKLabelNode?
     var hearts: [SKSpriteNode] = []
     
     init(with size: CGSize) {
@@ -60,6 +61,20 @@ class GameHUD: SKScene {
             y: frame.maxY - pointsLabel.frame.size.height/2 - (view?.safeAreaInsets.top ?? 0)
         )
         addChild(pointsLabel)
+    }
+    
+    func showWaitingForOpponent() {
+        waitingLabel = SKLabelNode(fontNamed: "")
+        guard let waitingLabel = waitingLabel else { return }
+        waitingLabel.text = "Waiting for opponent..."
+        waitingLabel.fontSize = 20.0
+        waitingLabel.horizontalAlignmentMode = .center
+        waitingLabel.position = CGPoint(
+            x: frame.midX,
+            y: frame.midY + 30
+        )
+        
+        addChild(waitingLabel)
     }
     
     func updatePoints(with points: Int) {
