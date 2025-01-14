@@ -7,8 +7,10 @@
 
 import Foundation
 import AVFoundation
+import SwiftUI
 
 class AudioPlayerManager {
+    @AppStorage("isAudioEnabled") var isAudioEnabled: Bool = true
     static let shared = AudioPlayerManager()
     private var audioPlayers: [String: AVAudioPlayer] = [:]
     
@@ -16,6 +18,7 @@ class AudioPlayerManager {
     deinit { stopAllAudio() }
     
     func play(_ file: File) {
+        guard isAudioEnabled else { return }
         if file == .background {
             self.playSound(named: "background", numberOfLoops: -1, volume: 0.1)
         } else {

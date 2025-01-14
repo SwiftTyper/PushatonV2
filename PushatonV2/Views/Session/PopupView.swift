@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Amplify
 
 struct PopupView: View {
     @Binding var isShowing: Bool
@@ -21,46 +22,43 @@ struct PopupView: View {
                         isShowing = false
                     }
                 
-                VStack(spacing: 20) {
+                VStack(spacing: 0) {
                     Text("Settings")
-                        .font(.headline)
+                        .font(.title)
+                        .foregroundStyle(Color.primaryText)
                     
-                    Toggle("Sound", isOn: $toggleValue)
-                        .padding(.horizontal)
+                    Form {
+                        Toggle("Sound", isOn: AudioPlayerManager.shared.$isAudioEnabled)
+                        
+                        Button("Sign Out") {
+                            Task {
+                                await Amplify.Auth.signOut()
+                            }
+                        }
+                    }
+                    .scrollContentBackground(.hidden)
                 }
-                .frame(width: 300)
-                .background(Color.white)
+                .frame(width: 300, height: 180)
+                .padding()
+                .background(Color.primaryBackground)
                 .cornerRadius(20)
                 .shadow(radius: 10)
-                .overlay {
+                .overlay(alignment: .topTrailing){
                     Button {
                        isShowing = false
                     } label: {
                         Image(systemName: "xmark")
+                            .font(.title3)
+                            .bold()
+                            .foregroundStyle(Color.primaryText)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .padding([.top, .trailing], 15)
                 }
             }
-        }
-    }
-}
-
-struct TestView: View {
-    @State private var showPopup = false
-    
-    var body: some View {
-        ZStack {
-            // Main content
-            Button("Show Popup") {
-                showPopup = true
-            }
-            
-            // Popup
-            PopupView(isShowing: $showPopup)
         }
     }
 }
 
 #Preview {
-    TestView()
+    PopupView(isShowing: .constant(true))
 }

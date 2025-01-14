@@ -22,8 +22,6 @@ struct GameResultView: View {
         abs(opponentScore - playerScore)
     }
     
-    let percentagePassed: Int = 30
-    
     var body: some View {
         NavigationStack {
             GeometryReader { geo in
@@ -59,10 +57,6 @@ struct GameResultView: View {
                             }
                         }
                         .buttonStyle(PlayAgainButtonStyle(type: result))
-                        
-                        Text("You are in the top **\(percentagePassed)%** of players")
-                            .foregroundColor(.primaryText)
-                            .font(.title3)
                     }
                     
                     Spacer()
