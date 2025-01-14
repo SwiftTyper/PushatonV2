@@ -40,8 +40,6 @@ class GameController: NSObject {
         Lane.setup(self)
         player.setup(self)
         camera.setup(self)
-        
-//        Ground.setup(self)
        
         Obstacle.setup(self)
         Light.setup(self)
@@ -68,32 +66,40 @@ class GameController: NSObject {
             .store(in: &cancellables)
     }
     
-    func handlePlayerStateChangedWithPrediction(to playerState: String) {
-        let obstacle = Obstacle.getClosestToPlayer()
+    enum Action {
+        case jump
+        case dash
+    }
+    
+    func getSuggestedAction() -> Action? {
+        guard let obstacle = Obstacle.getClosestToPlayer() else { return nil }
         let zPosition = obstacle.position.z
         let isLow = (obstacle.boundingBox.max.y - obstacle.boundingBox.min.y) < 2
-        if zPosition < 10 {
+        
+        if zPosition < 30 {
             if isLow {
-                //the suggested action would be to jump
+                return Action.jump
             } else {
-                //the suggested action would be to dash
+                return Action.dash
             }
         }
-        
-    
-        
+        return nil
     }
     
     func handlePlayerStateChanged(to playerState: String) {
         print(playerState)
+        
         let isPlayerUp = (playerState == PushupClassifierV3.Label.pushupUp.rawValue || playerState == PushupClassifierV3.Label.pushupUpHold.rawValue)
         let wasPlayerDown = (previousPlayerState == nil || previousPlayerState == PushupClassifierV3.Label.pushupDownHold.rawValue || previousPlayerState == PushupClassifierV3.Label.pushupDown.rawValue)
         let isPlayerDown = (playerState == PushupClassifierV3.Label.pushupDown.rawValue || playerState == PushupClassifierV3.Label.pushupDownHold.rawValue)
         let wasPlayerUp = previousPlayerState == nil || previousPlayerState == PushupClassifierV3.Label.pushupUp.rawValue || previousPlayerState == PushupClassifierV3.Label.pushupUpHold.rawValue
         
-        if isPlayerUp && wasPlayerDown {
+        let action = getSuggestedAction()
+        print(action)
+        
+        if (action == .jump || action == nil) && isPlayerUp && wasPlayerDown {
             player.jump()
-        } else if isPlayerDown && wasPlayerUp {
+        } else if (action == .dash || action == nil) && isPlayerDown && wasPlayerUp {
             player.dash()
         }
                 

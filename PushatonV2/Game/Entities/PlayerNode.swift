@@ -16,7 +16,7 @@ class PlayerNode: SCNNode {
     override init() {
         super.init()
         let playerGeometry = SCNBox(width: PlayerNode.size, height: PlayerNode.size, length: PlayerNode.size, chamferRadius: 0)
-        playerGeometry.firstMaterial?.diffuse.contents = UIColor.blue
+        playerGeometry.firstMaterial?.diffuse.contents = UIColor(.primaryBackground)
         geometry = playerGeometry
         
         let physicsShape = SCNPhysicsShape(geometry: playerGeometry, options: [
@@ -27,6 +27,8 @@ class PlayerNode: SCNNode {
         physicsBody?.categoryBitMask = CollisionCategory.player.rawValue
         physicsBody?.contactTestBitMask = CollisionCategory.obstacle.rawValue
         physicsBody?.collisionBitMask = CollisionCategory.obstacle.rawValue
+        
+        position = .init(x: 0, y: Lane.segmentHeight + Float(PlayerNode.size)/2, z: 0)
     }
     
     required init?(coder: NSCoder) {
@@ -49,6 +51,7 @@ extension PlayerNode {
     func jump() {
         guard !isManeuvering else { return  }
         isManeuvering = true
+        print(self.position)
         let moveUpAction = SCNAction.moveBy(x: 0, y: 2, z: 0, duration: 0.4)
         let moveDownAction = SCNAction.moveBy(x: 0, y: -2, z: 0, duration: 0.3)
         moveUpAction.timingMode = .easeOut
@@ -88,8 +91,6 @@ extension PlayerNode {
     }
     
     func setup(_ gameController: GameController) {
-        let size: Float = self.boundingBox.max.y - self.boundingBox.min.y
-        position = .init(x: 0, y: Lane.segmentHeight + size/2, z: 0)
         gameController.scene.rootNode.addChildNode(self)
     }
 }
