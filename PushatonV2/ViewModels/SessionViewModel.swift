@@ -40,10 +40,20 @@ class SessionViewModel {
     private func checkInitialStatus() async {
         do {
             let session = try await Amplify.Auth.fetchAuthSession()
-            self.state = session.isSignedIn ? .loggedIn : .loggedOut
+            let hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+            if session.isSignedIn {
+                self.state = .loggedIn
+            } else {
+                self.state = hasSeenOnboarding ? .loggedOut : .onboarding
+            }
         } catch {
             print("Failed to fetch auth session: \(error)")
             self.state = .notDetermined
         }
+    }
+    
+    func setSeenOnboarding() {
+        self.state = .loggedOut
+        UserDefaults.standard.setValue(true, forKey: "hasSeenOnboarding")
     }
 }

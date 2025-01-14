@@ -12,4 +12,5 @@ enum LoginStatus: Equatable {
     case notDetermined
     case loggedIn
     case loggedOut
+    case onboarding
 }

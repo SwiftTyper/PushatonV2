@@ -16,6 +16,11 @@ struct ContentView: View {
         Group {
             switch sessionViewModel.state {
                 case .loggedIn: GameView()
+                case .onboarding: OnboardingView(
+                    viewModel: .init(
+                        didSelectGetStarted: sessionViewModel.setSeenOnboarding
+                    )
+                )
                 default: GameProgressView()
             }
         }
