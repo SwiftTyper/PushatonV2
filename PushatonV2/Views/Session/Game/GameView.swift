@@ -27,7 +27,8 @@ struct GameView: View {
                             case .playing:
                                 GameSceneView(
                                     gameMatchViewModel: gameMatchViewModel,
-                                    playerViewModel: playerViewModel
+                                    playerViewModel: playerViewModel,
+                                    predictionViewModel: predictionViewModel
                                 )
                             case .finished:
                                 GameOverView()

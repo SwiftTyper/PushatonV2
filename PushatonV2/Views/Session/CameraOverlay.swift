@@ -35,22 +35,21 @@ struct CameraOverlay: View {
             }
         }
         .onAppear {
-            viewModel.setupConditionMonitoring {
-                AudioPlayerManager.shared.play(.background)
-                Task {
-             //                        //could potentially be moved to run in parrallel (if the gameready executes first then no problem becuase gamematchviewmodel will fetch the initla status, however if it doesn't and the startMatch extectures first then also not a problem as it will have set up the listener and reacted to the new changes)
-                     await playerViewModel.makeGameReady()
-                     await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
-                         playerViewModel.createOpponentSubscription(id: opponentId)
+            if gameMatchViewModel.game?.status != .playing {
+                viewModel.setupConditionMonitoring {
+                    AudioPlayerManager.shared.play(.background)
+                    Task {
+                        //could potentially be moved to run in parrallel (if the gameready executes first then no problem becuase gamematchviewmodel will fetch the initla status, however if it doesn't and the startMatch extectures first then also not a problem as it will have set up the listener and reacted to the new changes)
+                         await playerViewModel.makeGameReady()
+                         await gameMatchViewModel.startMatch(playerId: playerViewModel.playerId) { opponentId in
+                             playerViewModel.createOpponentSubscription(id: opponentId)
+                         }
+                         viewModel.isShowingCameraOverlay = false
                      }
-                     viewModel.isShowingCameraOverlay = false
-                 }
+                }
+                viewModel.updateLabels(with: .startingPrediction)
             }
-            viewModel.updateLabels(with: .startingPrediction)
         }
-//        .onDisappear {
-//            viewModel.stopConditionMonitoring()
-//        }
         .frame(
             width: (
                 !viewModel.isShowingCameraOverlay

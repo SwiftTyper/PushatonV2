@@ -9,8 +9,8 @@ import Foundation
 
 extension PushupClassifierV4 {
     enum Label: Int, CaseIterable {
-        case pushupUp = 0
-        case pushupDown = 1
+        case pushupDown = 0
+        case pushupUp = 1
         case other = 2
         
         func getTitle() -> String {

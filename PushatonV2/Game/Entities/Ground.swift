@@ -12,7 +12,7 @@ class Ground: SCNNode {
     override init() {
         super.init()
         let floor = SCNFloor()
-        floor.firstMaterial?.diffuse.contents = UIColor.green
+        floor.firstMaterial?.diffuse.contents = UIColor.clear
         floor.reflectivity = 0.1
         
         geometry = floor

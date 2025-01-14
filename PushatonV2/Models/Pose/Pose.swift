@@ -62,7 +62,6 @@ struct Pose {
         guard let multiArray = try? MLMultiArray(shape: [NSNumber(value: 1), NSNumber(value: 1), NSNumber(value: 38)], dataType: .float32) else {
             fatalError("Couldn't create multiArray")
         }
-        
         let bodyParts = observation.availableJointNames
         guard let recognizedPoints = try? observation.recognizedPoints(forGroupKey: .all) else {
             return multiArray

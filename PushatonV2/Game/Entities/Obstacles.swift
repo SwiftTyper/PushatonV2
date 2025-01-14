@@ -24,9 +24,41 @@ class Obstacle: SCNNode {
     }
     
     private func setupObstacle(with data: ObstacleData) {
-        let barHeight: Float = data.isLow ? 1 : 2
+        let barHeight: Float = data.isLow ? 1 : 2.5
         let barGeometry = SCNBox(width: 4, height: CGFloat(barHeight), length: CGFloat(Obstacle.length), chamferRadius: 0.05)
-        barGeometry.firstMaterial?.diffuse.contents = data.isLow ? UIColor.red : UIColor.yellow
+        
+        // Create glass material
+        let glassMaterial = SCNMaterial()
+        
+        // Base color (tinted glass)
+//        let baseColor = data.isLow ? UIColor(red: 1, green: 0, blue: 0, alpha: 0.5) : UIColor(red: 1, green: 1, blue: 0, alpha: 0.5)
+        let baseColor = UIColor(white: 0.2, alpha: 0.7)
+        glassMaterial.diffuse.contents = baseColor
+        
+        // Add transparency
+        glassMaterial.transparency = 0.8
+        
+        // Add reflectivity
+        glassMaterial.lightingModel = .physicallyBased
+        glassMaterial.metalness.contents = 0.0
+        glassMaterial.roughness.contents = 0.2
+        
+        // Add fresnel effect (edges appear more reflective)
+        glassMaterial.fresnelExponent = 2.0
+        
+        // Add slight specular highlight
+        glassMaterial.specular.contents = UIColor.white
+        glassMaterial.shininess = 100
+        
+        // Enable blending for transparency
+        glassMaterial.blendMode = .alpha
+        
+        // Add slight refraction
+//        glassMaterial.refra = 1.5
+        
+        // Apply material
+        barGeometry.firstMaterial = glassMaterial
+        
         self.geometry = barGeometry
         self.name = "obstacle"
         self.position = SCNVector3(x: 0, y: Float(data.isLow ? barHeight * 0.5 : 0.5 + 0.1 + (barHeight * 0.5)), z: 0)
@@ -45,11 +77,41 @@ class Obstacle: SCNNode {
         let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
         self.runAction(SCNAction.repeatForever(moveAction))
     }
+    
+//    private func setupObstacle(with data: ObstacleData) {
+//        let barHeight: Float = data.isLow ? 1 : 2.5
+//        let barGeometry = SCNBox(width: 4, height: CGFloat(barHeight), length: CGFloat(Obstacle.length), chamferRadius: 0.05)
+//        barGeometry.firstMaterial?.diffuse.contents = data.isLow ? UIColor.red : UIColor.yellow
+//        self.geometry = barGeometry
+//        self.name = "obstacle"
+//        self.position = SCNVector3(x: 0, y: Float(data.isLow ? barHeight * 0.5 : 0.5 + 0.1 + (barHeight * 0.5)), z: 0)
+//        
+//        let physicsShape = SCNPhysicsShape(geometry: barGeometry, options: [
+//            SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.boundingBox
+//        ])
+//        
+//        self.physicsBody = SCNPhysicsBody(type: .kinematic, shape: physicsShape)
+//        self.physicsBody?.categoryBitMask = CollisionCategory.obstacle.rawValue
+//        self.physicsBody?.contactTestBitMask = CollisionCategory.player.rawValue
+//        self.physicsBody?.collisionBitMask = CollisionCategory.player.rawValue
+//        
+//        self.position.y += Lane.segmentHeight
+//        
+//        let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
+//        self.runAction(SCNAction.repeatForever(moveAction))
+//    }
 }
 
 extension Obstacle: Collidable {
     func didCollide(with node: SCNNode, _ gameController: GameController) {
         return
+    }
+}
+
+extension Obstacle{
+    static func getClosestToPlayer() -> Obstacle {
+        guard !Obstacle.obstacles.isEmpty else { fatalError() }
+        return Obstacle.obstacles.first!
     }
 }
 

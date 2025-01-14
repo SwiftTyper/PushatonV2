@@ -132,7 +132,7 @@ extension VideoProcessingChain {
     }
 
     private func checkConfidence(_ actionPrediction: ActionPrediction) -> ActionPrediction {
-        let minimumConfidence = 0.7
+        let minimumConfidence = 0.5
         let lowConfidence = actionPrediction.confidence < minimumConfidence
         return lowConfidence ? .lowConfidencePrediction : actionPrediction
     }

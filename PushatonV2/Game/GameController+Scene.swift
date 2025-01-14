@@ -15,6 +15,22 @@ extension GameController {
         
         scene = .init()
         scene.physicsWorld.contactDelegate = self
+        
+        let skySphere = SCNSphere(radius: 1000)
+              
+        let skyMaterial = SCNMaterial()
+        skyMaterial.diffuse.contents = UIColor.skyBlue
+        skyMaterial.isDoubleSided = true
+        skySphere.materials = [skyMaterial]
+          
+        let skyNode = SCNNode(geometry: skySphere)
+        skyNode.renderingOrder = -1
+        scene.rootNode.addChildNode(skyNode)
+      
+        scene.fogStartDistance = 20
+        scene.fogEndDistance = 80
+        scene.fogDensityExponent = 1.5
+        scene.fogColor = UIColor(white: 0.7, alpha: 0.7) as Any
        
         sceneView.backgroundColor = .skyBlue
         sceneView.allowsCameraControl = false
