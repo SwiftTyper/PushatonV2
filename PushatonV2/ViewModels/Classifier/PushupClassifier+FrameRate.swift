@@ -8,10 +8,13 @@
 import Foundation
 import CoreML
 
-extension PushupClassifierV4 {
+extension PushupClassifierV3 {
     static let frameRate:Double = 30.0
     
     func calculatePredictionWindowSize() -> Int {
-        return Int(PushupClassifierV4.frameRate)
+        guard let dimmensions = model.modelDescription.inputDescriptionsByName.first?.value.multiArrayConstraint?.shape else {
+            fatalError("Falied To retrive the models multiarray dimmensions")
+        }
+        return Int(truncating: dimmensions[1])
     }
 }

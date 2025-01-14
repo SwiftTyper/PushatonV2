@@ -35,7 +35,7 @@ struct VideoProcessingChain {
     
     private var frameProcessingChain: AnyCancellable?
     private let humanBodyPoseRequest = VNDetectHumanBodyPoseRequest()
-    private let actionClassifier = PushupClassifierV4.shared
+    private let actionClassifier = PushupClassifierV3.shared
     private let predictionWindowSize: Int
     private let windowStride = 15
 
@@ -132,7 +132,7 @@ extension VideoProcessingChain {
     }
 
     private func checkConfidence(_ actionPrediction: ActionPrediction) -> ActionPrediction {
-        let minimumConfidence = 0.5
+        let minimumConfidence = 0.40
         let lowConfidence = actionPrediction.confidence < minimumConfidence
         return lowConfidence ? .lowConfidencePrediction : actionPrediction
     }

@@ -36,7 +36,7 @@ class Obstacle: SCNNode {
         glassMaterial.diffuse.contents = baseColor
         
         // Add transparency
-        glassMaterial.transparency = 0.8
+        glassMaterial.transparency = 0.9
         
         // Add reflectivity
         glassMaterial.lightingModel = .physicallyBased

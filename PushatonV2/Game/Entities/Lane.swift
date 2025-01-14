@@ -15,29 +15,29 @@ class Lane: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    private func setupLane(width: CGFloat) {
-//        let geometry = SCNBox(
-//            width: width,
-//            height: CGFloat(Lane.segmentHeight),
-//            length: CGFloat(Lane.segmentLength),
-//            chamferRadius: 0
-//        )
-//        let material = SCNMaterial()
-//        if let texturePath = Bundle.main.path(forResource: "concrete", ofType: "jpg"),
-//           let texture = UIImage(contentsOfFile: texturePath) {
-//            material.diffuse.contents = texture
-//            material.diffuse.wrapT = .repeat
-//            material.diffuse.wrapS = .repeat
-//            material.diffuse.contentsTransform = SCNMatrix4MakeScale(Float(width), 1, Lane.segmentLength)
-//        }
-//        geometry.materials = [material]
-//        self.geometry = geometry
-//        
-//        self.position.y = Lane.segmentHeight/2
-//        
-//        let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
-//        self.runAction(SCNAction.repeatForever(moveAction))
-//    }
+    //    private func setupLane(width: CGFloat) {
+    //        let geometry = SCNBox(
+    //            width: width,
+    //            height: CGFloat(Lane.segmentHeight),
+    //            length: CGFloat(Lane.segmentLength),
+    //            chamferRadius: 0
+    //        )
+    //        let material = SCNMaterial()
+    //        if let texturePath = Bundle.main.path(forResource: "concrete", ofType: "jpg"),
+    //           let texture = UIImage(contentsOfFile: texturePath) {
+    //            material.diffuse.contents = texture
+    //            material.diffuse.wrapT = .repeat
+    //            material.diffuse.wrapS = .repeat
+    //            material.diffuse.contentsTransform = SCNMatrix4MakeScale(Float(width), 1, Lane.segmentLength)
+    //        }
+    //        geometry.materials = [material]
+    //        self.geometry = geometry
+    //
+    //        self.position.y = Lane.segmentHeight/2
+    //
+    //        let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
+    //        self.runAction(SCNAction.repeatForever(moveAction))
+    //    }
     
     private func setupLane(width: CGFloat) {
         let geometry = SCNBox(
@@ -63,9 +63,9 @@ class Lane: SCNNode {
         // Draw white tile with thick outline on all sides
         let outlineThickness: CGFloat = 15.0  // Increased thickness for more visible outlines
         let tilePath = UIBezierPath(rect: CGRect(x: outlineThickness,
-                                                y: outlineThickness,
-                                                width: textureSize - (outlineThickness * 2),
-                                                height: textureSize - (outlineThickness * 2)))
+                                                 y: outlineThickness,
+                                                 width: textureSize - (outlineThickness * 2),
+                                                 height: textureSize - (outlineThickness * 2)))
         
         // Fill tile with white
         UIColor.white.setFill()
@@ -73,16 +73,16 @@ class Lane: SCNNode {
         
         // Add subtle shading for depth
         let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                                colors: [UIColor.white.cgColor,
-                                        UIColor(white: 0.9, alpha: 1.0).cgColor] as CFArray,
-                                locations: [0, 1])!
+                                  colors: [UIColor.white.cgColor,
+                                           UIColor(white: 0.9, alpha: 1.0).cgColor] as CFArray,
+                                  locations: [0, 1])!
         
         context.saveGState()
         tilePath.addClip()
         context.drawLinearGradient(gradient,
-                                 start: CGPoint(x: 0, y: 0),
-                                 end: CGPoint(x: textureSize, y: textureSize),
-                                 options: [])
+                                   start: CGPoint(x: 0, y: 0),
+                                   end: CGPoint(x: textureSize, y: textureSize),
+                                   options: [])
         context.restoreGState()
         
         let tileTexture = UIGraphicsGetImageFromCurrentImageContext()
@@ -104,11 +104,29 @@ class Lane: SCNNode {
         geometry.materials = [material]
         self.geometry = geometry
         
+        let physicsShape = SCNPhysicsShape(geometry: geometry, options: [
+            SCNPhysicsShape.Option.type: SCNPhysicsShape.ShapeType.boundingBox
+        ])
+        
+        self.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
+        self.physicsBody?.allowsResting = true
+        self.physicsBody?.contactTestBitMask = CollisionCategory.ground.rawValue
+        self.physicsBody?.collisionBitMask = CollisionCategory.ground.rawValue
+        self.physicsBody?.categoryBitMask = CollisionCategory.ground.rawValue
+        self.physicsBody?.isAffectedByGravity = false
+        
         self.position.y = Lane.segmentHeight/2
         
         let moveAction = SCNAction.moveBy(x: 0, y: 0, z: 20, duration: 1)
         self.runAction(SCNAction.repeatForever(moveAction))
-    }}
+    }
+}
+
+extension Lane: Collidable {
+    func didCollide(with node: SCNNode, _ gameController: GameController) {
+        
+    }
+}
 
 extension Lane {
     static func setup(_ gameController: GameController) {

@@ -39,7 +39,7 @@ struct Pose {
         self.observation = observation
         
         area = Pose.areaEstimateOfLandmarks(landmarks)
-        multiArray = Pose.getMultiArray(observation: observation)
+        multiArray = Pose.getMinimalMultiArray(observation: observation)
         buildConnections()
     }
     
@@ -58,20 +58,29 @@ struct Pose {
         return allBodyPartsDetected
     }
     
-    static func getMultiArray(observation: VNObservation) -> MLMultiArray {
-        guard let multiArray = try? MLMultiArray(shape: [NSNumber(value: 1), NSNumber(value: 1), NSNumber(value: 38)], dataType: .float32) else {
+    static func getMinimalMultiArray(observation: VNObservation) -> MLMultiArray {
+        guard let multiArray = try? MLMultiArray(shape: [NSNumber(value: 1), NSNumber(value: 1), NSNumber(value: 16)], dataType: .float32) else {
             fatalError("Couldn't create multiArray")
         }
-        let bodyParts = observation.availableJointNames
+        
+        let requiredBodyParts: [JointName] = [.rightElbow , .leftElbow, .leftWrist, .rightWrist, .rightShoulder, .leftShoulder, .neck, .nose]
+        
         guard let recognizedPoints = try? observation.recognizedPoints(forGroupKey: .all) else {
             return multiArray
         }
+        
         var index: Int = 0
-        for point in recognizedPoints {
-            multiArray[index] = NSNumber(value: point.value.x)
-            multiArray[index+1] = NSNumber(value: point.value.y)
+        
+        for bodyPart in requiredBodyParts {
+            guard let point = recognizedPoints[bodyPart.rawValue] else {
+                index += 2
+                continue
+            }
+            multiArray[index] = NSNumber(value: point.x)
+            multiArray[index+1] = NSNumber(value: point.y)
             index+=2
         }
+        
         return multiArray
     }
     

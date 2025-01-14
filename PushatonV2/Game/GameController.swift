@@ -12,7 +12,6 @@ class GameController: NSObject {
     var speed: Float = 0.15
     var previousPlayerState: String? = nil
     var cancellables: Set<AnyCancellable> = []
-    var technique: SCNTechnique? = nil
     
     var hud: GameHUD!
     var camera = Camera()
@@ -38,12 +37,12 @@ class GameController: NSObject {
         
         setupScene()
         setupGestures()
+        Lane.setup(self)
         player.setup(self)
         camera.setup(self)
         
-        setupFog()
-        Ground.setup(self)
-        Lane.setup(self)
+//        Ground.setup(self)
+       
         Obstacle.setup(self)
         Light.setup(self)
     }
@@ -69,19 +68,6 @@ class GameController: NSObject {
             .store(in: &cancellables)
     }
     
-//    func handlePlayerStateChanged(to playerState: String) {
-//        if (playerState == PushupClassifierV4.Label.pushupUp.getTitle()) &&
-//            (previousPlayerState == nil || previousPlayerState == PushupClassifierV4.Label.pushupDown.getTitle())
-//        {
-//            player.jump()
-////            if playerStateController.canEnterState(JumpingState.self) {
-////                run(Sound.jump.action)
-////            }
-////            playerStateController.enter(JumpingState.self)
-//        }
-//        
-//        previousPlayerState = playerState
-//    }
     func handlePlayerStateChangedWithPrediction(to playerState: String) {
         let obstacle = Obstacle.getClosestToPlayer()
         let zPosition = obstacle.position.z
@@ -99,29 +85,19 @@ class GameController: NSObject {
     }
     
     func handlePlayerStateChanged(to playerState: String) {
-        if playerState != ActionPrediction.lowConfidencePrediction.label && playerState != ActionPrediction.startingPrediction.label && playerState != ActionPrediction.noPersonPrediction.label {
-            if (playerState == PushupClassifierV4.Label.pushupDown.getTitle()){
-                //&& (previousPlayerState == PushupClassifierV4.Label.pushupUp.getTitle())
-               
-                print(previousPlayerState)
-                print(playerState)
-                print("dashed")
-                player.dash()
-            }
-            
-            // Going from pushup-down to pushup-up = JUMP
-            if (playerState == PushupClassifierV4.Label.pushupUp.getTitle())
-                //&&(previousPlayerState == PushupClassifierV4.Label.pushupDown.getTitle())
-            {
-                player.jump()
-                print(previousPlayerState)
-                print(playerState)
-                print("jumped")
-            }
-            
-            // Store the state for next comparison
-            previousPlayerState = playerState
+        print(playerState)
+        let isPlayerUp = (playerState == PushupClassifierV3.Label.pushupUp.rawValue || playerState == PushupClassifierV3.Label.pushupUpHold.rawValue)
+        let wasPlayerDown = (previousPlayerState == nil || previousPlayerState == PushupClassifierV3.Label.pushupDownHold.rawValue || previousPlayerState == PushupClassifierV3.Label.pushupDown.rawValue)
+        let isPlayerDown = (playerState == PushupClassifierV3.Label.pushupDown.rawValue || playerState == PushupClassifierV3.Label.pushupDownHold.rawValue)
+        let wasPlayerUp = previousPlayerState == nil || previousPlayerState == PushupClassifierV3.Label.pushupUp.rawValue || previousPlayerState == PushupClassifierV3.Label.pushupUpHold.rawValue
+        
+        if isPlayerUp && wasPlayerDown {
+            player.jump()
+        } else if isPlayerDown && wasPlayerUp {
+            player.dash()
         }
+                
+        previousPlayerState = playerState
     }
     
     func gameOver() {
@@ -137,41 +113,6 @@ class GameController: NSObject {
 //            }
 //        }
     }
-    
-    func setupFog() {
-        scene.fogStartDistance = 10
-        scene.fogEndDistance = 50
-    }
-    
-//    func setupFog() {
-//          // Set initial fog properties
-//          scene.fogStartDistance = 10
-//          scene.fogEndDistance = 50
-//          scene.fogDensityExponent = 2.0
-//          scene.fogColor = Color.white
-////          scene.fogColor = Any(Color.white)
-//          
-//          // Optional: Create a method to adjust fog based on player movement
-//          updateFogBasedOnPlayer()
-//      }
-//      
-//      func updateFogBasedOnPlayer() {
-//          // Add this to your renderer delegate or wherever you update game state
-//          let playerPosition = player.position
-//          
-//          // Adjust fog based on player's forward position (z-axis)
-//          // As player moves forward, fog gets more intense
-//          let baseFogStart: CGFloat = 10
-//          let baseFogEnd: CGFloat = 50
-//          
-//          // Reduce fog distances as player moves forward
-//          let distanceFactor = CGFloat(abs(playerPosition.z)) * 0.1
-//          scene.fogStartDistance = max(5, baseFogStart - distanceFactor)
-//          scene.fogEndDistance = max(20, baseFogEnd - distanceFactor)
-//          
-//          // Optional: Adjust density for more dramatic effect
-//          scene.fogDensityExponent = 2.0 + CGFloat(abs(playerPosition.z)) * 0.05
-//      }
 }
 
 extension GameController: SCNSceneRendererDelegate {

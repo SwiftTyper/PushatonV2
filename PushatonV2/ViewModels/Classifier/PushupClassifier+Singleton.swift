@@ -7,12 +7,12 @@
 
 import CoreML
 
-extension PushupClassifierV4 {
+extension PushupClassifierV3 {
     
-    static let shared: PushupClassifierV4 = {
+    static let shared: PushupClassifierV3 = {
         let defaultConfig = MLModelConfiguration()
         
-        guard let pushupClassifer = try? PushupClassifierV4(configuration: defaultConfig) else {
+        guard let pushupClassifer = try? PushupClassifierV3(configuration: defaultConfig) else {
             fatalError("Pushup Classifier failed to initialize.")
         }
         

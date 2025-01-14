@@ -7,24 +7,19 @@
 
 import Foundation
 
-extension PushupClassifierV4 {
-    enum Label: Int, CaseIterable {
-        case pushupDown = 0
-        case pushupUp = 1
-        case other = 2
+extension PushupClassifierV3 {
+    enum Label: String, CaseIterable {
+        case pushupUp = "Pushup Up"
+        case pushupUpHold = "Pushup Up Hold"
+        case pushupDownHold = "Pushup Down Hold"
+        case pushupDown = "Pushup Down"
         
-        func getTitle() -> String {
-            switch self {
-                case .pushupUp: "Pushup Up"
-                case .pushupDown: "Pushup Down"
-                case .other: "Other"
+        init(_ string: String) {
+            guard let label = Label(rawValue: string) else {
+                let typeName = String(reflecting: Label.self)
+                fatalError("Add the `\(string)` label to the `\(typeName)` type.")
             }
-        }
-        
-        init(_ int: Int) {
-            guard let label = Label(rawValue: int) else {
-                fatalError("get good")
-            }
+
             self = label
         }
     }

@@ -121,7 +121,7 @@ extension VideoCapture {
         captureSession.beginConfiguration()
         defer { captureSession.commitConfiguration() }
 
-        let modelFrameRate = PushupClassifierV4.frameRate
+        let modelFrameRate = PushupClassifierV3.frameRate
         let input = AVCaptureDeviceInput.createCameraInput(position: cameraPosition, frameRate: modelFrameRate)
         let output = AVCaptureVideoDataOutput.withPixelFormatType(kCVPixelFormatType_32BGRA)
 
