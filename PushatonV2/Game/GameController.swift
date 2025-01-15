@@ -36,7 +36,7 @@ class GameController: NSObject {
         setupPlayerStateObserver()
         
         setupScene()
-        setupGestures()
+//        setupGestures()
         Lane.setup(self)
         player.setup(self)
         camera.setup(self)
